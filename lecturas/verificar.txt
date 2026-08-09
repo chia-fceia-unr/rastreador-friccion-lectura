@@ -1,0 +1,7 @@
+Una herramienta de IA generativa puede afirmar, con total seguridad, que un libro existe, que un autor dijo tal frase o que un dato tiene tal valor… y estar inventándolo. A estas invenciones se las suele llamar «alucinaciones», pero el nombre engaña: no son fallas raras del sistema, sino una consecuencia directa de cómo funciona. El modelo produce texto plausible, no texto verificado.
+
+El problema es que una afirmación falsa bien redactada es más difícil de detectar que una mal redactada. Cuando algo suena experto, tendemos a bajar la guardia. Por eso, cuanto más pulida es una respuesta, más importante se vuelve preguntarse de dónde sale lo que dice.
+
+Verificar no significa desconfiar de todo, sino tratar cada afirmación importante como una hipótesis hasta poder contrastarla con una fuente independiente: un texto de la materia, un artículo, una base de datos. La IA puede ser un buen punto de partida para buscar; rara vez es un buen punto final para citar.
+
+Hay una fricción productiva en ese instante en que frenás y te preguntás «¿esto es cierto o solo suena bien?». Ese hábito —chequear antes de repetir— es una de las competencias centrales que un profesional necesita en un mundo lleno de texto generado automáticamente.

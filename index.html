@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Rastreador de Fricción de Lectura — actividad de lectura metacognitiva en español para el curso «Herramientas de Inteligencia Artificial» de la FCEIA–UNR. Marcá los fragmentos de fricción en un texto y observá cómo cambia tu pensamiento.">
+<title data-i18n="doc_title">Reading Tracker</title>
+<style>
+  /* ===== Paleta FCEIA–UNR ===== */
+  :root{
+    --um-blue:#15246E;      /* Navy FCEIA (color del logo) — títulos, texto principal */
+    --um-blue-2:#2173A6;    /* Azul de marca — enlaces, gradiente */
+    --um-red:#2173A6;       /* Color de acción (texto blanco encima) — botones, pasos */
+    --um-red-dark:#185E86;  /* Acción, estado hover */
+    --accent:#1FBF92;       /* Verde IA — barra de acento, énfasis positivo */
+    --sky:#84B1D9;          /* Azul claro — acentos secundarios */
+    --pale:#C6D9B8;         /* Verde pálido — fondos suaves */
+    --paper:#FFFFFF;
+    --bg:#F6F9FC;
+    --ink:#15246E;
+    --muted:#6B7A93;
+    --faint:#9AA8BC;
+    --line:#DCE5EF;
+    --focus:#2173A6;
+
+    /* Colores por tipo de fricción (elegidos por contraste sobre blanco) */
+    --c-confusion:#7A5AA6;
+    --c-agreement:#17916B;
+    --c-skepticism:#15246E;
+    --c-connection:#2173A6;
+    --c-importance:#B0791A;
+    --c-example:#C2410C;
+
+    --radius:12px;
+    --shadow:0 2px 10px rgba(20,33,61,.10);
+    --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-read:Georgia,"Iowan Old Style","Times New Roman",serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:var(--font-sans);
+    color:var(--ink);
+    background:var(--bg);
+    line-height:1.55;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 16px 140px;}
+
+  a{color:var(--um-blue-2);}
+  a:focus-visible,button:focus-visible,textarea:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{
+    outline:3px solid var(--focus);outline-offset:2px;border-radius:6px;
+  }
+
+  /* ===== Header ===== */
+  header.site{
+    background:linear-gradient(135deg,var(--um-blue),var(--um-blue-2));
+    color:#fff;padding:26px 16px 22px;
+  }
+  header.site .inner{max-width:1080px;margin:0 auto;}
+  header.site .topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:0 0 14px;flex-wrap:wrap;}
+  header.site .brand{display:inline-flex;align-items:center;text-decoration:none;}
+  header.site .brand-logo{height:46px;width:auto;display:block;}
+  header.site h1{margin:0;font-size:clamp(1.5rem,4vw,2.1rem);letter-spacing:.2px;}
+  header.site .tagline{margin:.35rem 0 0;color:#dbe6f2;font-size:1rem;max-width:64ch;}
+  .accent-bar{height:6px;background:linear-gradient(90deg,var(--accent) 0%,var(--sky) 60%,var(--um-blue-2) 100%);}
+  .byline{margin-top:12px;font-size:.85rem;color:#b9c2d8;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;}
+  .byline strong{color:#fff;}
+
+  /* ===== Language toggle ===== */
+
+  /* ===== Cards / sections ===== */
+  section.card{
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:20px;margin:18px 0;
+  }
+  section.card > h2{
+    margin:0 0 .5rem;font-size:1.2rem;color:var(--um-blue);
+    display:flex;align-items:center;gap:10px;
+  }
+  .step-num{
+    background:var(--um-red);color:#fff;width:1.7em;height:1.7em;border-radius:50%;
+    display:inline-grid;place-items:center;font-size:.85rem;font-weight:700;flex:0 0 auto;
+  }
+  .lead{color:var(--muted);margin:.25rem 0 1rem;}
+
+  /* ===== Instructions ===== */
+  .how ol{margin:.3rem 0 0;padding-left:1.2rem;}
+  .how li{margin:.4rem 0;}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .legend .chip{font-size:.82rem;}
+
+  /* ===== Reading source controls ===== */
+  .source-toggle{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+  #sampleWrap{margin-bottom:12px;}
+  .reading-select{width:100%;max-width:520px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:1rem;color:var(--ink);background:#fff;}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;}
+  .seg button{
+    border:0;background:#fff;color:var(--um-blue);padding:8px 16px;font-size:.9rem;font-weight:600;cursor:pointer;
+  }
+  .seg button[aria-pressed="true"]{background:var(--um-blue);color:#fff;}
+  textarea.paste{
+    width:100%;min-height:160px;padding:12px;border:1px solid var(--line);border-radius:10px;
+    font-family:var(--font-read);font-size:1rem;resize:vertical;
+  }
+  .row-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;}
+
+  button.btn{
+    border:0;border-radius:999px;padding:11px 20px;font-size:.95rem;font-weight:700;cursor:pointer;
+    font-family:inherit;
+  }
+  button.btn.primary{background:var(--um-red);color:#fff;}
+  button.btn.primary:hover{background:var(--um-red-dark);}
+  button.btn.secondary{background:#eef0f4;color:var(--um-blue);border:1px solid var(--line);}
+  button.btn.secondary:hover{background:#e2e6ee;}
+  button.btn:disabled{opacity:.5;cursor:not-allowed;}
+
+  /* ===== Reading passage ===== */
+  .reading{
+    font-family:var(--font-read);font-size:1.12rem;line-height:1.85;color:#23262e;
+    -webkit-user-select:text;user-select:text;
+  }
+  .reading p{margin:0 0 1.05rem;}
+  .reading .hint-empty{font-family:var(--font-sans);color:var(--muted);font-style:italic;}
+
+  /* highlight marks */
+  .friction-mark{
+    border-radius:4px;padding:.05em .08em;cursor:pointer;
+    box-shadow:inset 0 -2px 0 0 currentColor;
+  }
+  .friction-mark.confusion{background:#ece4f5;color:var(--c-confusion);}
+  .friction-mark.agreement{background:#dcefe7;color:var(--c-agreement);}
+  .friction-mark.skepticism{background:#dee2ef;color:var(--c-skepticism);}
+  .friction-mark.connection{background:#dde9f2;color:var(--c-connection);}
+  .friction-mark.importance{background:#f5ecd3;color:var(--c-importance);}
+  .friction-mark.example{background:#f8e6dc;color:var(--c-example);}
+  .friction-mark:hover{filter:brightness(.97);}
+  .friction-mark.flash{animation:flash 1.1s ease;}
+  @keyframes flash{0%{outline:3px solid var(--focus);}100%{outline:0 solid transparent;}}
+
+  /* ===== Tagging bar (sticky) ===== */
+  .tagbar{
+    position:fixed;left:0;right:0;bottom:0;z-index:50;
+    background:rgba(255,255,255,.97);border-top:2px solid var(--um-blue);
+    box-shadow:0 -4px 18px rgba(20,33,61,.18);
+    padding:10px 12px;backdrop-filter:saturate(1.2) blur(4px);
+  }
+  .tagbar .tb-inner{max-width:1080px;margin:0 auto;}
+  .tagbar .sel-preview{
+    font-size:.85rem;color:var(--muted);margin:0 0 8px;min-height:1.2em;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .tagbar .sel-preview b{color:var(--ink);font-style:italic;font-family:var(--font-read);}
+  .tag-buttons{display:flex;flex-wrap:wrap;gap:8px;}
+  .tag-buttons button{
+    flex:1 1 auto;min-width:128px;border:1px solid var(--line);border-radius:999px;
+    background:#fff;padding:9px 12px;font-size:.86rem;font-weight:700;cursor:pointer;
+    display:flex;align-items:center;gap:7px;justify-content:center;font-family:inherit;color:var(--ink);
+  }
+  .tag-buttons button .dot{width:12px;height:12px;border-radius:50%;flex:0 0 auto;}
+  .tag-buttons button:disabled{opacity:.45;cursor:not-allowed;}
+  .tag-buttons button:not(:disabled):hover{background:#f2f4f8;}
+  .dot.confusion{background:var(--c-confusion);}
+  .dot.agreement{background:var(--c-agreement);}
+  .dot.skepticism{background:var(--c-skepticism);}
+  .dot.connection{background:var(--c-connection);}
+  .dot.importance{background:var(--c-importance);}
+  .dot.example{background:var(--c-example);}
+
+  /* toggle (pressed) states in the tag bar */
+  .tag-buttons button[aria-pressed="true"]{color:#fff;border-color:transparent;}
+  .tag-buttons button[aria-pressed="true"] .dot{box-shadow:0 0 0 2px #fff inset;}
+  .tag-buttons button[data-type="confusion"][aria-pressed="true"]{background:var(--c-confusion);}
+  .tag-buttons button[data-type="agreement"][aria-pressed="true"]{background:var(--c-agreement);}
+  .tag-buttons button[data-type="skepticism"][aria-pressed="true"]{background:var(--c-skepticism);}
+  .tag-buttons button[data-type="connection"][aria-pressed="true"]{background:var(--c-connection);}
+  .tag-buttons button[data-type="importance"][aria-pressed="true"]{background:var(--c-importance);}
+  .tag-buttons button[data-type="example"][aria-pressed="true"]{background:var(--c-example);}
+  .tb-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:9px;}
+  .tb-actions .visually-quiet{margin:0;}
+  .tagbar{max-height:72vh;overflow-y:auto;}
+  .tb-reflections{margin-top:2px;}
+  .tb-refl{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);}
+  .tb-refl .chip{margin-bottom:4px;}
+  .tb-refl .prompt{font-size:.9rem;color:var(--um-blue);font-weight:600;margin:6px 0 4px;}
+  .tb-refl textarea{width:100%;min-height:64px;padding:10px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:.95rem;resize:vertical;}
+  .ai-note{margin-top:12px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:11px 14px;}
+  .ai-note .ai-note-title{font-weight:700;color:var(--um-blue);margin:0 0 6px;}
+  .ai-note p{margin:0;}
+
+  /* multi-label highlight */
+  .friction-mark.multi{
+    background:#fff6da;color:#8a6d00;
+    box-shadow:inset 0 -3px 0 0 var(--um-blue);
+  }
+
+  /* per-label block inside a marker card */
+  .label-block{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);}
+  .label-block:first-of-type{border-top:0;padding-top:0;}
+  .label-block .chip{margin-bottom:4px;}
+
+  /* ===== Synthesis matrix ===== */
+  .matrix-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:10px;}
+  table.matrix{border-collapse:collapse;width:100%;min-width:560px;font-size:.88rem;}
+  table.matrix th,table.matrix td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top;}
+  table.matrix thead th{background:var(--um-blue);color:#fff;position:sticky;top:0;font-weight:700;font-size:.8rem;}
+  table.matrix thead th.type-col{text-align:center;writing-mode:horizontal-tb;}
+  table.matrix td.type-cell{text-align:center;}
+  table.matrix tbody tr:nth-child(even){background:#fafbfc;}
+  table.matrix .passage-cell{font-family:var(--font-read);font-style:italic;color:#33373f;max-width:340px;}
+  table.matrix .mx-dot{display:inline-block;width:15px;height:15px;border-radius:50%;}
+  .matrix-empty{color:var(--muted);font-style:italic;}
+  .pattern-note{margin-top:12px;background:#f1f4fa;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:.9rem;}
+  .pattern-note strong{color:var(--um-blue);}
+
+  .chip{
+    display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;
+    font-size:.8rem;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--ink);
+  }
+
+  /* ===== Marker log ===== */
+  .log-empty{color:var(--muted);font-style:italic;}
+  .marker{
+    border:1px solid var(--line);border-left:5px solid var(--line);border-radius:10px;
+    padding:14px;margin:12px 0;background:#fcfcfd;
+  }
+  .marker[data-type="confusion"]{border-left-color:var(--c-confusion);}
+  .marker[data-type="agreement"]{border-left-color:var(--c-agreement);}
+  .marker[data-type="skepticism"]{border-left-color:var(--c-skepticism);}
+  .marker[data-type="connection"]{border-left-color:var(--c-connection);}
+  .marker[data-type="importance"]{border-left-color:var(--c-importance);}
+  .marker[data-type="example"]{border-left-color:var(--c-example);}
+  .marker .m-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;}
+  .marker .m-quote{
+    font-family:var(--font-read);font-style:italic;color:#33373f;margin:8px 0;
+    border-left:3px solid var(--line);padding-left:10px;
+  }
+  .marker .prompt{font-size:.9rem;color:var(--um-blue);font-weight:600;margin:6px 0 4px;}
+  .marker textarea{
+    width:100%;min-height:74px;padding:10px;border:1px solid var(--line);border-radius:8px;
+    font-family:inherit;font-size:.95rem;resize:vertical;
+  }
+  .marker .m-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:8px;}
+  .icon-btn{
+    border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;
+    font-size:.82rem;cursor:pointer;color:var(--muted);font-weight:600;font-family:inherit;
+  }
+  .icon-btn:hover{background:#f2f4f8;color:var(--um-red);border-color:var(--um-red);}
+
+  /* ===== Synthesis ===== */
+  .synth label{display:block;font-weight:600;color:var(--um-blue);margin:14px 0 5px;}
+  .synth textarea, .name-input{
+    width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:.97rem;
+  }
+  .synth textarea{min-height:70px;resize:vertical;}
+  .name-input{max-width:320px;}
+
+  /* ===== Summary output ===== */
+  .summary-out{
+    width:100%;min-height:240px;padding:14px;border:1px solid var(--line);border-radius:10px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86rem;line-height:1.5;
+    white-space:pre-wrap;background:#fbfbfc;
+  }
+  .copied-note{color:var(--c-agreement);font-weight:700;font-size:.85rem;margin-left:8px;}
+  .count-grid{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 0;}
+
+  /* ===== Footer ===== */
+  footer.site{font-size:.82rem;color:var(--muted);padding:8px 4px 0;}
+  footer.site .footer-logo{height:38px;width:auto;display:block;margin:2px 0 12px;opacity:.92;}
+  footer.site .lic{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;}
+  footer.site .badge{
+    border:1px solid var(--line);border-radius:6px;padding:2px 8px;background:#fff;font-weight:700;color:var(--um-blue);
+  }
+  details.ai{margin-top:10px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 12px;}
+  details.ai summary{cursor:pointer;font-weight:700;color:var(--um-blue);padding:10px 0;}
+  details.ai p{margin:0 0 12px;}
+
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
+  .visually-quiet{color:var(--muted);font-size:.85rem;}
+
+  @media (max-width:560px){
+    section.card{padding:16px;}
+    .tag-buttons button{min-width:calc(50% - 4px);}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{scroll-behavior:auto;animation:none!important;}
+  }
+
+  @page{margin:1.4cm;}
+</style>
+
+<!-- Report styles: self-contained (no CSS variables) so they can be embedded in the downloadable report file -->
+<style id="reportCss">
+  .report{font-family:Georgia,"Times New Roman",serif;color:#1a1d24;line-height:1.55;max-width:840px;margin:0 auto;}
+  .report .sans{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .report-head{border-bottom:4px solid #1FBF92;padding-bottom:12px;margin-bottom:14px;}
+  .report-logo{height:40px;width:auto;display:block;margin:0 0 10px;}
+  .report-title{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:1.55rem;color:#15246E;margin:0;font-weight:800;letter-spacing:.2px;}
+  .report-sub{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#6B7A93;font-size:.92rem;margin:5px 0 0;}
+  .report-meta{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:.95rem;margin:10px 0 0;color:#1a1d24;}
+  .report h3{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#15246E;font-size:1.08rem;margin:24px 0 10px;border-left:5px solid #1FBF92;padding-left:9px;}
+  .rstats{display:flex;flex-wrap:wrap;gap:8px;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .rstat{border:1px solid #d9dde4;border-radius:9px;padding:8px 14px;font-size:.82rem;color:#5a6170;background:#fbfbfc;}
+  .rstat b{display:block;color:#15246E;font-size:1.3rem;line-height:1.1;}
+  .chart{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin-top:4px;}
+  .chart-row{display:flex;align-items:center;gap:10px;margin:6px 0;}
+  .chart-label{flex:0 0 130px;font-size:.83rem;}
+  .chart-track{flex:1;background:#eef0f4;border-radius:6px;height:20px;overflow:hidden;}
+  .chart-fill{height:100%;border-radius:6px;min-width:2px;}
+  .chart-num{flex:0 0 28px;text-align:right;font-size:.83rem;font-weight:700;color:#15246E;}
+  table.rmatrix{border-collapse:collapse;width:100%;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:.8rem;}
+  table.rmatrix th,table.rmatrix td{border:1px solid #d9dde4;padding:7px 6px;text-align:center;vertical-align:top;}
+  table.rmatrix thead th{background:#15246E;color:#fff;font-size:.74rem;}
+  table.rmatrix td.rp{text-align:left;font-family:Georgia,serif;font-style:italic;color:#33373f;max-width:340px;}
+  .mxd{display:inline-block;width:14px;height:14px;border-radius:50%;}
+  .rcard{border:1px solid #d9dde4;border-left:6px solid #15246E;border-radius:9px;padding:13px 15px;margin:11px 0;page-break-inside:avoid;}
+  .rcard-quote{font-style:italic;color:#23262e;margin:0 0 9px;}
+  .rlabels{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+  .rlabel{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:.72rem;font-weight:700;color:#fff;padding:3px 10px;border-radius:999px;}
+  .rrefl{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:.92rem;margin:7px 0 0;}
+  .rrefl .rl{font-weight:700;color:#15246E;}
+  .rrefl .blank{color:#9aa0ad;font-style:italic;}
+  .rqa{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .rqa-q{font-weight:700;color:#15246E;margin:14px 0 3px;}
+  .rqa-a{margin:0;white-space:pre-wrap;}
+  .rqa-a.blank{color:#9aa0ad;font-style:italic;}
+  .report-footer{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin-top:24px;border-top:1px solid #d9dde4;padding-top:11px;font-size:.78rem;color:#5a6170;}
+  .report-footer .lic-badge{display:inline-block;border:1px solid #d9dde4;border-radius:6px;padding:2px 8px;background:#fff;font-weight:700;color:#15246E;margin-right:8px;}
+</style>
+</head>
+<body>
+<div class="accent-bar" aria-hidden="true"></div>
+<header class="site">
+  <div class="inner">
+    <div class="topbar">
+      <a class="brand" href="https://www.fceia.unr.edu.ar" target="_blank" rel="noopener">
+        <img class="brand-logo" src="logo-fceia-blanco.png" alt="Facultad de Ciencias Exactas, Ingeniería y Agrimensura — UNR" width="368" height="80">
+      </a>
+    </div>
+    <h1 data-i18n="header_h1">Rastreador de fricción de lectura</h1>
+    <p class="tagline" data-i18n="header_tagline">Registrá dónde tu pensamiento se traba al leer un texto. Una actividad de lectura para el curso «Herramientas de Inteligencia Artificial».</p>
+    <p class="byline"><span data-i18n="byline_org">Herramientas de Inteligencia Artificial &middot; FCEIA &ndash; UNR</span><span>&middot;</span><span data-i18n="byline_adapted">Adaptación de la FCEIA&ndash;UNR</span><span>&middot;</span><span data-i18n="byline_original">a partir de la actividad de Marc Watkins &middot; CC&nbsp;BY&nbsp;4.0</span></p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- HOW IT WORKS -->
+  <section class="card how" aria-labelledby="how-h">
+    <h2 id="how-h"><span class="step-num" aria-hidden="true">i</span> <span data-i18n="how_h2">How this works</span></h2>
+    <p class="lead" data-i18n="how_lead">&ldquo;Friction&rdquo; is any moment a text makes you pause &mdash; confusion, agreement, doubt, a connection, something that matters, or a place you wish you had an example. Marking these moments and reflecting on them is how careful readers think about their own thinking.</p>
+    <ol>
+      <li data-i18n="how_li1">Load a reading below: use the built-in sample, or paste your own assigned text.</li>
+      <li data-i18n="how_li2"><strong>Select any words, phrase, or sentence</strong> in the reading (drag with a mouse, or press-and-hold on a phone).</li>
+      <li data-i18n="how_li3">In the bar at the bottom of the screen, tap <strong>one or more</strong> kinds of friction you felt &mdash; a single passage can be confusing <em>and</em> important at once &mdash; then press <strong>Add to log</strong>.</li>
+      <li data-i18n="how_li4">A short reflection prompt appears for each label in your <em>Friction log</em>. Answer each in a sentence or two.</li>
+      <li data-i18n="how_li5">Consultá la <em>Matriz de síntesis</em> para ver tus etiquetas una al lado de la otra, respondé las preguntas de cierre, y <strong>generá un informe para descargar</strong> y subirlo al aula virtual del curso.</li>
+    </ol>
+    <div class="legend" data-i18n-aria="aria_friction_types" aria-label="Friction types">
+      <span class="chip"><span class="dot confusion" style="width:12px;height:12px;border-radius:50%"></span><span data-i18n="type_confusion">Confusion</span></span>
+      <span class="chip"><span class="dot agreement" style="width:12px;height:12px;border-radius:50%"></span><span data-i18n="type_agreement">Agreement</span></span>
+      <span class="chip"><span class="dot skepticism" style="width:12px;height:12px;border-radius:50%"></span><span data-i18n="type_skepticism">Skepticism</span></span>
+      <span class="chip"><span class="dot connection" style="width:12px;height:12px;border-radius:50%"></span><span data-i18n="type_connection">Connection</span></span>
+      <span class="chip"><span class="dot importance" style="width:12px;height:12px;border-radius:50%"></span><span data-i18n="type_importance">Importance</span></span>
+      <span class="chip"><span class="dot example" style="width:12px;height:12px;border-radius:50%"></span><span data-i18n="type_example">Need an example</span></span>
+    </div>
+    <p class="visually-quiet" style="margin-top:12px" data-i18n="how_privacy">Nothing you type is saved or sent anywhere. Everything stays in this browser tab and disappears when you close it, so copy your summary before you leave.</p>
+  </section>
+
+  <!-- READING -->
+  <section class="card" aria-labelledby="read-h">
+    <h2 id="read-h"><span class="step-num" aria-hidden="true">1</span> <span data-i18n="read_h2">Your reading</span></h2>
+    <div class="source-toggle">
+      <div class="seg" role="group" data-i18n-aria="aria_source" aria-label="Choose reading source">
+        <button id="srcSample" type="button" aria-pressed="true" data-i18n="src_sample">Use sample reading</button>
+        <button id="srcPaste" type="button" aria-pressed="false" data-i18n="src_paste">Paste my own text</button>
+      </div>
+    </div>
+
+    <div id="sampleWrap">
+      <label for="readingSelect" class="sr-only" data-i18n="reading_select_label">Elegí una lectura</label>
+      <select id="readingSelect" class="reading-select"></select>
+    </div>
+
+    <div id="pasteWrap" hidden>
+      <label for="pasteBox" class="sr-only" data-i18n="paste_label">Paste your reading text</label>
+      <textarea id="pasteBox" class="paste" data-i18n-ph="paste_ph" placeholder="Paste your assigned reading here. Separate paragraphs with a blank line, then click &ldquo;Load this text.&rdquo;"></textarea>
+      <div class="row-actions">
+        <button id="loadPaste" class="btn primary" type="button" data-i18n="load_btn">Load this text</button>
+        <button id="clearMarksFromPaste" class="btn secondary" type="button" data-i18n="clear_btn">Clear all marks</button>
+      </div>
+    </div>
+
+    <hr style="border:0;border-top:1px solid var(--line);margin:16px 0" aria-hidden="true">
+    <article id="reading" class="reading" data-i18n-aria="reading_aria" aria-label="Reading passage. Select text to tag a moment of friction."></article>
+  </section>
+
+  <!-- FRICTION LOG -->
+  <section class="card" aria-labelledby="log-h">
+    <h2 id="log-h"><span class="step-num" aria-hidden="true">2</span> <span data-i18n="log_h2">Your friction log</span></h2>
+    <p class="lead" data-i18n="log_lead">Each marked moment lands here with a reflection prompt for every label you applied. Aim for at least <strong>four</strong> markers across at least <strong>two</strong> different friction types &mdash; and notice the passages where more than one kind of friction overlaps.</p>
+    <div class="count-grid" id="countGrid" aria-live="polite"></div>
+    <div id="log"><p class="log-empty"></p></div>
+  </section>
+
+  <!-- SYNTHESIS MATRIX -->
+  <section class="card" aria-labelledby="mx-h">
+    <h2 id="mx-h"><span class="step-num" aria-hidden="true">3</span> <span data-i18n="mx_h2">Synthesis matrix</span></h2>
+    <p class="lead" data-i18n="mx_lead">Every passage you tagged, laid out against the six kinds of friction. Reading across a row shows where one passage triggered several reactions at once; reading down a column shows your habits as a reader. Use the patterns here to write your reflection below.</p>
+    <div class="matrix-scroll">
+      <table class="matrix" id="matrixTable" data-i18n-aria="aria_matrix" aria-label="Matrix of tagged passages by friction type"></table>
+    </div>
+    <div id="patternNote" class="pattern-note" hidden></div>
+  </section>
+
+  <!-- SYNTHESIS -->
+  <section class="card synth" aria-labelledby="syn-h">
+    <h2 id="syn-h"><span class="step-num" aria-hidden="true">4</span> <span data-i18n="syn_h2">Step back &amp; synthesize</span></h2>
+    <p class="lead" data-i18n="syn_lead">Una última pregunta para poner en palabras cómo te fue con la lectura.</p>
+
+    <label for="nameField" data-i18n="name_label">Nombre y apellido</label>
+    <input id="nameField" class="name-input" type="text" data-i18n-ph="name_ph" placeholder="p. ej., Juan Pérez" autocomplete="off">
+
+    <label for="q1" data-i18n="q1_label">¿En qué te quedás pensando después de leer el texto?</label>
+    <textarea id="q1"></textarea>
+  </section>
+
+  <!-- VISUAL REPORT -->
+  <section class="card" aria-labelledby="sum-h">
+    <h2 id="sum-h"><span class="step-num" aria-hidden="true">5</span> <span data-i18n="sum_h2">Your visual report</span></h2>
+    <p class="lead" data-i18n="sum_lead">Generá el resumen de tu trabajo y copialo para entregarlo en el campus virtual.</p>
+    <div class="row-actions" style="margin:0 0 12px">
+      <button id="copySummary" class="btn primary" type="button" data-i18n="copy_btn">Copiar al portapapeles</button>
+      <span id="copiedNote" class="copied-note" role="status" aria-live="polite"></span>
+    </div>
+    <label for="summaryOut" class="sr-only" data-i18n="summary_out_label">Resumen de reflexión generado</label>
+    <textarea id="summaryOut" class="summary-out" readonly data-i18n-ph="summary_ph" placeholder="Tu resumen va a aparecer acá."></textarea>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site">
+    <img class="footer-logo" src="logo-fceia-navy.png" alt="Facultad de Ciencias Exactas, Ingeniería y Agrimensura — UNR">
+    <div class="lic">
+      <span class="badge">CC BY 4.0</span>
+      <span data-i18n="footer_license">&ldquo;Reading Friction Tracker&rdquo; by <strong>Marc Watkins</strong>, University of Mississippi, is licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC&nbsp;BY&nbsp;4.0</a>. You may share and adapt it with attribution.</span>
+    </div>
+    <div class="ai-note">
+      <p class="ai-note-title" data-i18n="ai_summary">Aviso sobre el uso de IA</p>
+      <p data-i18n="ai_para">Aviso sobre el uso de IA.</p>
+    </div>
+  </footer>
+</main>
+
+<!-- STICKY TAGGING BAR -->
+<div class="tagbar" role="region" data-i18n-aria="aria_tagbar" aria-label="Tag selected text">
+  <div class="tb-inner">
+    <p class="sel-preview" id="selPreview"></p>
+    <div class="tag-buttons" id="tagButtons">
+      <button type="button" data-type="confusion" aria-pressed="false" disabled><span class="dot confusion"></span><span data-i18n="tag_confusion">Confused</span></button>
+      <button type="button" data-type="agreement" aria-pressed="false" disabled><span class="dot agreement"></span><span data-i18n="tag_agreement">I agree</span></button>
+      <button type="button" data-type="skepticism" aria-pressed="false" disabled><span class="dot skepticism"></span><span data-i18n="tag_skepticism">Skeptical</span></button>
+      <button type="button" data-type="connection" aria-pressed="false" disabled><span class="dot connection"></span><span data-i18n="tag_connection">Connection</span></button>
+      <button type="button" data-type="importance" aria-pressed="false" disabled><span class="dot importance"></span><span data-i18n="tag_importance">Important</span></button>
+      <button type="button" data-type="example" aria-pressed="false" disabled><span class="dot example"></span><span data-i18n="tag_example">Need example</span></button>
+    </div>
+    <div class="tb-reflections" id="tbReflections"></div>
+    <div class="tb-actions">
+      <button id="addTags" class="btn primary" type="button" disabled data-i18n="add_btn">Add to log</button>
+      <span id="tbHint" class="visually-quiet"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ===================================================================
+     Bilingual dictionary (English / French)
+     =================================================================== */
+  var I18N = {
+    es: {
+      doc_title:"Rastreador de fricción de lectura · Herramientas de IA (FCEIA–UNR)",
+      header_h1:"Rastreador de fricción de lectura",
+      header_tagline:"Registrá dónde tu pensamiento se traba al leer un texto. Una actividad de lectura para el curso «Herramientas de Inteligencia Artificial».",
+      byline_created:"Creado por",
+      byline_org:"Herramientas de Inteligencia Artificial &middot; FCEIA &ndash; UNR",
+      byline_adapted:"Adaptación de la FCEIA&ndash;UNR",
+      byline_original:"a partir de la actividad de Marc Watkins &middot; CC&nbsp;BY&nbsp;4.0",
+
+      how_h2:"Cómo funciona",
+      how_lead:"La &laquo;&nbsp;fricción&nbsp;&raquo; es cualquier fragmento del texto donde tu pensamiento se traba &mdash; confusión, acuerdo, duda, una conexión, algo importante, o un lugar donde te habría gustado un ejemplo. Marcar esos fragmentos y reflexionar sobre ellos es la forma en que quien lee con atención piensa sobre su propio pensamiento.",
+      how_li1:"Cargá una lectura abajo.",
+      how_li2:"<strong>Seleccioná una palabra, frase u oración</strong> en la lectura (arrastrá con el mouse, o mantené presionado en el celular).",
+      how_li3:"En la barra de abajo, tocá <strong>uno o más</strong> tipos de fricción que sentiste &mdash; un mismo fragmento puede ser confuso <em>e</em> importante a la vez.",
+      how_li4:"Para cada etiqueta que elegiste aparece una consigna de reflexión ahí mismo, en la barra: escribí una o dos oraciones y apretá <strong>Agregar al registro</strong>.",
+      how_li5:"Generá tu informe, copialo al portapapeles, y entregalo en el campus virtual.",
+      how_privacy:"Nada de lo que escribís se guarda ni se envía a ningún lado. Todo queda en esta pestaña del navegador y desaparece cuando la cerrás, así que descargá tu informe antes de salir.",
+
+      read_h2:"Tu lectura",
+      aria_source:"Elegir la fuente de lectura",
+      aria_friction_types:"Tipos de fricción",
+      aria_matrix:"Matriz de fragmentos etiquetados por tipo de fricción",
+      aria_tagbar:"Etiquetar el texto seleccionado",
+      summary_out_label:"Resumen de reflexión generado",
+      src_sample:"Lecturas del curso",
+      reading_select_label:"Elegí una lectura del curso",
+      src_paste:"Pegar mi propio texto",
+      paste_label:"Pegá tu texto de lectura",
+      paste_ph:"Pegá acá tu lectura asignada. Separá los párrafos con una línea en blanco y después hacé clic en «Cargar este texto».",
+      load_btn:"Cargar este texto",
+      clear_btn:"Borrar todas las marcas",
+      reading_aria:"Fragmento de lectura. Seleccioná texto para etiquetar un fragmento de fricción.",
+
+      log_h2:"Tu registro de fricción",
+      log_lead:"Cada fragmento marcado aparece acá con la reflexión que escribiste para cada etiqueta. Buscá al menos <strong>cuatro</strong> marcas repartidas en al menos <strong>dos</strong> tipos de fricción distintos.",
+
+      mx_h2:"Matriz de síntesis",
+      mx_lead:"Cada fragmento que etiquetaste, dispuesto frente a los seis tipos de fricción. Leer una fila muestra dónde un fragmento provocó varias reacciones a la vez&nbsp;; leer una columna revela tus hábitos como quien lee. Usá estos patrones para redactar tu reflexión más abajo.",
+
+      syn_h2:"Tomá distancia y sintetizá",
+      syn_lead:"Una última pregunta para poner en palabras cómo te fue con la lectura.",
+      name_label:"Nombre y apellido",
+      name_optional:"(opcional &mdash; se usa solo en el texto del informe)",
+      name_ph:"p. ej., Juan Pérez",
+      q1_label:"¿En qué te quedás pensando después de leer el texto?",
+      q2_label:"¿Cómo cambió tu pensamiento desde el comienzo de la lectura hasta el final?",
+      q3_label:"¿Qué vas a hacer distinto como lector o lectora la próxima vez que te encuentres con un texto como este?",
+
+      sum_h2:"Tu informe",
+      sum_lead:"Generá el resumen de tu trabajo y copialo para entregarlo en el campus virtual.",
+      build_btn:"Generar mi informe",
+      print_btn:"Guardar como PDF",
+      download_btn:"Descargar la página web (.html)",
+      report_pdf_note:"&laquo;&nbsp;Guardar como PDF&nbsp;&raquo; abre el cuadro de impresión de tu navegador &mdash; elegí <strong>Guardar como PDF</strong> como destino. Subí el PDF (o el archivo .html descargado) a la actividad del aula virtual para que tu docente pueda verlo.",
+      plaintext_summary:"Versión en texto sin formato (para copiar y pegar)",
+      gen_btn:"Generar el texto",
+      copy_btn:"Copiar al portapapeles",
+      summary_ph:"Tu resumen va a aparecer acá.",
+
+      footer_license:"&laquo;&nbsp;Reading Friction Tracker&nbsp;&raquo;, obra original de <strong>Marc Watkins</strong> (Universidad de Mississippi), bajo licencia <a href=\"https://creativecommons.org/licenses/by/4.0/deed.es\" target=\"_blank\" rel=\"noopener\">CC&nbsp;BY&nbsp;4.0</a>. Adaptación al español y a la identidad institucional de la <strong>FCEIA&ndash;UNR</strong> para el curso «Herramientas de Inteligencia Artificial». Esta obra derivada se comparte bajo la misma licencia CC&nbsp;BY&nbsp;4.0.",
+      ai_summary:"Aviso sobre el uso de IA",
+      ai_para:"La actividad original fue desarrollada por Marc Watkins con la ayuda de una herramienta de IA generativa, que contribuyó a redactar y estructurar el HTML, el CSS y el JavaScript. La adaptación para la FCEIA&ndash;UNR (identidad visual, textos y lectura de ejemplo) también se realizó con asistencia de IA generativa; todas las decisiones pedagógicas y la revisión final son de la cátedra. La actividad en sí funciona enteramente en tu navegador y no contiene ninguna función de IA &mdash; no genera, evalúa ni transmite ninguna de tus respuestas.",
+
+      type_confusion:"Confusión",
+      type_agreement:"Acuerdo",
+      type_skepticism:"Duda",
+      type_connection:"Conexión",
+      type_importance:"Importancia",
+      type_example:"Necesito un ejemplo",
+      prompt_confusion:"¿Qué es exactamente lo que no queda claro acá? Nombrá la palabra, idea o salto concreto que te perdió — y qué ayudaría a entenderlo.",
+      prompt_agreement:"¿Por qué estás de acuerdo? Apoyate en una experiencia, un ejemplo o una prueba que lo respalde para vos.",
+      prompt_skepticism:"¿Qué te hace dudar de esto? ¿Qué falta, y qué haría falta para que cambies de opinión?",
+      prompt_connection:"¿Con qué se conecta esto — otra lectura, una idea de clase, las noticias, o tu propia vida? Explicá el vínculo.",
+      prompt_importance:"¿Por qué importa esto? ¿Cómo podrías usar esta idea o llevarla a tu propio trabajo?",
+      prompt_example:"¿Qué tipo de ejemplo lo haría concreto? Probá esbozar uno propio.",
+
+      tag_confusion:"Confundido/a",
+      tag_agreement:"De acuerdo",
+      tag_skepticism:"Duda",
+      tag_connection:"Conexión",
+      tag_importance:"Importante",
+      tag_example:"Necesito ejemplo",
+      add_btn:"Agregar al registro",
+      tag_added:"Fragmento agregado al registro ✓",
+
+      tag_selPreviewDefault:"Seleccioná texto en la lectura de arriba y después elegí qué te hizo pensar.",
+      tag_selPrefix:"Selección: ",
+      tag_selSuffix:" — elegí una o más etiquetas.",
+      tag_hintDefault:"Elegí una o más etiquetas para tu selección.",
+      tag_hintOne:"1 etiqueta seleccionada — apretá Agregar al registro.",
+      tag_hintMany:"{n} etiquetas seleccionadas — apretá Agregar al registro.",
+      log_empty:"Todavía no hay fragmentos marcados. Seleccioná algún texto arriba para empezar.",
+      count_passagesWord:"fragmento(s)",
+      mx_empty:"Tu matriz se completa a medida que etiquetás fragmentos. Marcá algunos fragmentos arriba para ver el patrón.",
+      mx_colHash:"#",
+      mx_colPassage:"Fragmento",
+      pat_tagged:"Etiquetaste <strong>{n}</strong> fragmento(s).",
+      pat_frequent:"Tu reacción más frecuente es <strong>{label}</strong> ({n}).",
+      pat_overlaps:"<strong>{n}</strong> fragmento(s) provocaron más de un tipo de fricción — esos solapamientos suelen ser el material más rico para tu reflexión.",
+      pat_tip:"Consejo: probá etiquetar un fragmento con dos etiquetas a la vez para hacer aparecer una tensión que valga la pena analizar.",
+      alert_cross:"Esa selección cruzó demasiados elementos para marcarse de forma limpia. Probá seleccionar dentro de un solo párrafo.",
+      confirm_replace:"Cargar una nueva lectura va a borrar tus marcas y reflexiones actuales. ¿Seguir?",
+      alert_paste_empty:"Pegá primero algún texto.",
+      confirm_clear:"¿Borrar todas las marcas y reflexiones? El texto de la lectura queda.",
+      reading_empty_hint:"No hay texto cargado. Pegá tu lectura y hacé clic en «Cargar este texto».",
+      btn_find:"Localizar en el texto",
+      btn_delete:"Eliminar",
+      refl_ph:"Tu reflexión…",
+      refl_aria:"Reflexión para {label} en este fragmento",
+      mark_aria:"{labels} marca: {text}",
+      mark_title:"{labels} — hacé clic para ir a tu reflexión",
+      alert_report_build:"Etiquetá al menos un fragmento antes de generar tu informe.",
+      alert_report_print:"Etiquetá al menos un fragmento antes de guardar un informe.",
+      alert_report_download:"Etiquetá al menos un fragmento antes de descargar un informe.",
+      note_report_built:"Informe generado abajo.",
+      note_downloaded:"Descargado.",
+      note_copied:"¡Copiado!",
+      note_copy_fail:"Apretá Ctrl/Cmd+C para copiar.",
+
+      report_title:"Rastreador de fricción de lectura — Informe de reflexión",
+      report_sub:"Actividad de lectura metacognitiva &middot; Herramientas de Inteligencia Artificial (FCEIA&ndash;UNR)",
+      report_glance:"La fricción de un vistazo",
+      report_stat_passages:"fragmentos etiquetados",
+      report_stat_labels:"etiquetas de fricción",
+      report_stat_multi:"fragmentos con varias etiquetas",
+      report_stat_types:"de 6 tipos de fricción usados",
+      report_dist:"Cómo se distribuyó tu fricción",
+      report_none:"Ningún fragmento etiquetado.",
+      report_mx:"Matriz de síntesis",
+      report_passrefl:"Fragmentos y reflexiones",
+      report_blank:"(en blanco)",
+      report_changed:"Cómo cambió mi pensamiento",
+      report_q1:"Dónde sentí más fricción, y por qué",
+      report_q2:"Cómo cambió mi pensamiento de principio a fin",
+      report_q3:"Qué voy a hacer distinto como lector o lectora la próxima vez",
+      report_footer:"«Reading Friction Tracker», obra original de Marc Watkins (Universidad de Mississippi), bajo licencia CC BY 4.0. Adaptación de la FCEIA–UNR para el curso «Herramientas de Inteligencia Artificial», compartida bajo la misma licencia. No se recopilan, almacenan ni transmiten datos de los estudiantes.",
+
+      sum_title:"RASTREADOR DE FRICCIÓN DE LECTURA — RESUMEN DE REFLEXIÓN",
+      sum_name:"Nombre: ",
+      sum_date:"Fecha: ",
+      sum_glance:"LA FRICCIÓN DE UN VISTAZO",
+      sum_marked:"Fragmentos marcados: ",
+      sum_multi:"Fragmentos con más de una etiqueta: ",
+      sum_mx_legend:"MATRIZ DE SÍNTESIS  (Cf=Confusión  Ac=Acuerdo  Du=Duda  Cx=Conexión  Im=Importancia  Ej=Ejemplo)",
+      sum_mx_header:"  #  | Cf Ac Du Cx Im Ej | Fragmento",
+      sum_moments:"FRAGMENTOS DE FRICCIÓN",
+      sum_none_tagged:"(No se etiquetó ningún fragmento.)",
+      sum_none_marked:"(No se marcó ningún fragmento.)",
+      sum_passage:"Fragmento: ",
+      sum_labels:"Etiquetas: ",
+      sum_blank:"(en blanco)",
+      sum_changed:"SÍNTESIS",
+      sum_q1:"¿En qué me quedo pensando después de leer el texto?",
+      sum_q2:"Cómo cambió mi pensamiento de principio a fin:",
+      sum_q3:"Qué voy a hacer distinto como lector o lectora la próxima vez:",
+      sum_footer:"Reading Friction Tracker, obra original de Marc Watkins (Universidad de Mississippi), CC BY 4.0. Adaptación FCEIA–UNR — Herramientas de Inteligencia Artificial.",
+
+      download_filename:"friccion-de-lectura",
+      report_doc_title:"Informe de fricción de lectura — FCEIA–UNR",
+      locale:"es-AR"
+    }
+  };
+
+  /* Lectura embebida (respaldo cuando no se puede leer la carpeta lecturas/). */
+  var EMBEDDED_FALLBACK = [
+      "Cada vez que le pedís a una herramienta de inteligencia artificial que resuma, redacte o explique algo, recibís una respuesta que suena segura, ordenada y terminada. Pero esa fluidez es, en parte, una puesta en escena: el sistema no «sabe» lo que dice, sino que predice, palabra por palabra, cuál es la continuación más probable a partir de millones de textos. La seguridad del tono no es una medida de la verdad del contenido.",
+      "Es tentador tratar estas herramientas como un atajo que nos ahorra el esfuerzo de pensar. Sin embargo, delegar la primera versión de una idea también delega la parte más formativa del trabajo intelectual: dudar, comparar, descartar. Cuanto más aceptamos la respuesta que aparece primero, menos ejercitamos el criterio que nos permitiría evaluar si esa respuesta es buena.",
+      "Por eso, usar la IA con sentido crítico no consiste solo en preguntarte «¿la respuesta es correcta?», sino también «¿qué está haciendo esta herramienta con mi pregunta, y qué queda afuera?». ¿Qué fuentes hay detrás? ¿Qué sesgos arrastra el modelo? ¿Qué responsabilidad sigue siendo mía cuando firmo un trabajo hecho con su ayuda? Leer críticamente una salida de IA es leer también el sistema que la produjo, no solo el texto.",
+      "Nada de esto implica rechazar la herramienta. La fricción —el pequeño gesto de frenar, verificar una afirmación o reescribir con palabras propias— es lo que convierte a la IA en un instrumento de aprendizaje en lugar de un reemplazo. Cuando notás las costuras de un sistema diseñado para parecer impecable, recuperás la autoría sobre tu propio pensamiento."
+  ];
+  var readings = [];        // [{id,titulo,parrafos:[...]}]
+  var currentReading = 0;
+
+  /* ---------- Language state & helpers ---------- */
+  var LANG = "es";
+  function t(key){ var s = I18N[LANG][key]; return s==null ? key : s; }
+  function tf(key, map){
+    var s = t(key);
+    if(map){ Object.keys(map).forEach(function(k){ s = s.split("{"+k+"}").join(map[k]); }); }
+    return s;
+  }
+  function typeLabel(type){ return t("type_"+type); }
+  function typePrompt(type){ return t("prompt_"+type); }
+
+  /* ---------- Helpers ---------- */
+  function safeScroll(el,opts){ if(el && typeof el.scrollIntoView==="function"){ try{ el.scrollIntoView(opts); }catch(e){} } }
+  function escapeHTML(s){return String(s).replace(/[&<>"]/g,function(c){return({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c];});}
+
+  var TYPE_ORDER = ["confusion","agreement","skepticism","connection","importance","example"];
+
+  /* Friction-type colors (used for charts/report) */
+  var COLORS = {
+    confusion:"#7A5AA6", agreement:"#17916B", skepticism:"#15246E",
+    connection:"#2173A6", importance:"#B0791A", example:"#C2410C"
+  };
+
+  /* FCEIA wordmark (navy) as a data URI so the downloadable report stays self-contained */
+  var LOGO_NAVY = "data:image/png;base64,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";
+
+  /* ---------- State ---------- */
+  var markers = [];          // {id, types:[...], text, node, reflections:{type:str}}
+  var nextId = 1;
+  var lastRange = null;      // saved Range for the captured selection
+  var lastText = "";         // text of captured selection
+  var pendingTypes = [];     // labels toggled for the captured selection
+  var pendingReflections = {}; // reflections typed in the tag bar before committing
+  var sourceMode = "sample"; // "sample" | "paste"
+
+  /* ---------- Elements ---------- */
+  var readingEl = document.getElementById("reading");
+  var logEl = document.getElementById("log");
+  var countGrid = document.getElementById("countGrid");
+  var selPreview = document.getElementById("selPreview");
+  var tagButtons = document.getElementById("tagButtons");
+  var addTagsBtn = document.getElementById("addTags");
+  var tbHint = document.getElementById("tbHint");
+  var matrixTable = document.getElementById("matrixTable");
+  var patternNote = document.getElementById("patternNote");
+  var pasteWrap = document.getElementById("pasteWrap");
+  var pasteBox = document.getElementById("pasteBox");
+
+  /* ---------- Apply static translations to the DOM ---------- */
+  function applyI18n(){
+    document.documentElement.lang = LANG;
+    document.title = t("doc_title");
+    document.querySelectorAll("[data-i18n]").forEach(function(el){
+      var k = el.getAttribute("data-i18n");
+      if(I18N[LANG][k]!=null) el.innerHTML = I18N[LANG][k];
+    });
+    document.querySelectorAll("[data-i18n-ph]").forEach(function(el){
+      var k = el.getAttribute("data-i18n-ph");
+      if(I18N[LANG][k]!=null) el.setAttribute("placeholder", I18N[LANG][k]);
+    });
+    document.querySelectorAll("[data-i18n-aria]").forEach(function(el){
+      var k = el.getAttribute("data-i18n-aria");
+      if(I18N[LANG][k]!=null) el.setAttribute("aria-label", I18N[LANG][k]);
+    });
+  }
+
+  /* ---------- Render a reading from array of paragraph strings ---------- */
+  function renderReading(paras){
+    readingEl.innerHTML = "";
+    if(!paras || !paras.length){
+      readingEl.innerHTML = '<p class="hint-empty">'+escapeHTML(t("reading_empty_hint"))+'</p>';
+      return;
+    }
+    paras.forEach(function(txt){
+      var p = document.createElement("p");
+      p.textContent = txt;
+      readingEl.appendChild(p);
+    });
+  }
+
+  /* ---------- Selection handling ---------- */
+  function getReadingSelection(){
+    var sel = window.getSelection();
+    if(!sel || sel.rangeCount === 0 || sel.isCollapsed) return null;
+    var range = sel.getRangeAt(0);
+    if(!readingEl.contains(range.commonAncestorContainer)) return null;
+    var text = sel.toString().replace(/\s+/g," ").trim();
+    if(text.length < 2) return null;
+    return {range:range.cloneRange(), text:text};
+  }
+
+  function setToggleButtonsEnabled(on){
+    tagButtons.querySelectorAll("button").forEach(function(b){ b.disabled = !on; });
+  }
+  function resetToggles(){
+    pendingTypes = [];
+    pendingReflections = {};
+    tagButtons.querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-pressed","false"); });
+    renderPendingReflections();
+  }
+  function updateAddState(){
+    addTagsBtn.disabled = !(lastRange && pendingTypes.length);
+    if(pendingTypes.length){
+      tbHint.textContent = pendingTypes.length===1 ? t("tag_hintOne") : tf("tag_hintMany",{n:pendingTypes.length});
+    } else {
+      tbHint.textContent = t("tag_hintDefault");
+    }
+  }
+
+  /* Render reflection inputs inside the sticky bar for the currently toggled labels */
+  function renderPendingReflections(){
+    var host = document.getElementById("tbReflections");
+    if(!host) return;
+    host.innerHTML = "";
+    TYPE_ORDER.filter(function(ty){ return pendingTypes.indexOf(ty)>=0; }).forEach(function(ty){
+      var block = document.createElement("div");
+      block.className = "tb-refl";
+      var lc = document.createElement("span");
+      lc.className = "chip";
+      lc.innerHTML = '<span class="dot '+ty+'" style="width:12px;height:12px;border-radius:50%"></span>'+escapeHTML(typeLabel(ty));
+      block.appendChild(lc);
+      var pr = document.createElement("p");
+      pr.className = "prompt";
+      pr.textContent = typePrompt(ty);
+      block.appendChild(pr);
+      var ta = document.createElement("textarea");
+      ta.setAttribute("aria-label", tf("refl_aria",{label:typeLabel(ty)}));
+      ta.placeholder = t("refl_ph");
+      ta.value = pendingReflections[ty] || "";
+      ta.addEventListener("input", function(){ pendingReflections[ty] = ta.value; });
+      block.appendChild(ta);
+      host.appendChild(block);
+    });
+  }
+
+  function refreshSelectionState(){
+    var s = getReadingSelection();
+    if(s){
+      if(s.text !== lastText){ resetToggles(); }
+      lastRange = s.range;
+      lastText = s.text;
+      setToggleButtonsEnabled(true);
+      var preview = s.text.length > 90 ? s.text.slice(0,90) + "…" : s.text;
+      selPreview.innerHTML = escapeHTML(t("tag_selPrefix")) + "<b>“" + escapeHTML(preview) + "”</b>" + escapeHTML(t("tag_selSuffix"));
+    } else if(lastRange && pendingTypes.length){
+      /* keep the captured selection active while still toggling (mobile-safe) */
+    } else if(!pendingTypes.length){
+      lastRange = null; lastText = "";
+      setToggleButtonsEnabled(false);
+      selPreview.textContent = t("tag_selPreviewDefault");
+    }
+    updateAddState();
+  }
+
+  document.addEventListener("selectionchange", refreshSelectionState);
+
+  /* ---------- Toggle labels ---------- */
+  tagButtons.addEventListener("mousedown", function(e){ e.preventDefault(); });
+  tagButtons.addEventListener("click", function(e){
+    var btn = e.target.closest("button[data-type]");
+    if(!btn || btn.disabled) return;
+    var type = btn.getAttribute("data-type");
+    var i = pendingTypes.indexOf(type);
+    if(i>=0){ pendingTypes.splice(i,1); btn.setAttribute("aria-pressed","false"); delete pendingReflections[type]; }
+    else { pendingTypes.push(type); btn.setAttribute("aria-pressed","true"); }
+    renderPendingReflections();
+    updateAddState();
+  });
+
+  /* ---------- Apply a mark with all chosen labels ---------- */
+  function addMarker(){
+    if(!lastRange || !lastText || !pendingTypes.length) return;
+    var range = lastRange, text = lastText;
+    var types = TYPE_ORDER.filter(function(t2){ return pendingTypes.indexOf(t2)>=0; });
+
+    var id = nextId++;
+    var span = document.createElement("span");
+    span.className = "friction-mark " + (types.length>1 ? "multi" : types[0]);
+    span.setAttribute("data-id", String(id));
+    span.setAttribute("tabindex","0");
+    span.setAttribute("role","button");
+    var labelList = types.map(function(t2){return typeLabel(t2);}).join(", ");
+    span.setAttribute("aria-label", tf("mark_aria",{labels:labelList, text:text}));
+    span.title = tf("mark_title",{labels:labelList});
+
+    try{
+      range.surroundContents(span);
+    }catch(e){
+      try{
+        var frag = range.extractContents();
+        span.appendChild(frag);
+        range.insertNode(span);
+      }catch(err){
+        alert(t("alert_cross"));
+        return;
+      }
+    }
+
+    markers.push({id:id, types:types, text:text, node:span, reflections:Object.assign({}, pendingReflections)});
+
+    span.addEventListener("click", function(){ focusMarker(id); });
+    span.addEventListener("keydown", function(ev){
+      if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); focusMarker(id); }
+    });
+
+    window.getSelection().removeAllRanges();
+    lastRange = null; lastText = "";
+    resetToggles();
+    setToggleButtonsEnabled(false);
+    selPreview.textContent = t("tag_selPreviewDefault");
+    updateAddState();
+
+    renderLog();
+    renderMatrix();
+    tbHint.textContent = t("tag_added");
+    setTimeout(function(){ if(!pendingTypes.length){ tbHint.textContent = t("tag_hintDefault"); } }, 2000);
+  }
+
+  addTagsBtn.addEventListener("click", addMarker);
+
+  /* ---------- Render the log ---------- */
+  function renderLog(){
+    if(!markers.length){
+      logEl.innerHTML = '<p class="log-empty">'+escapeHTML(t("log_empty"))+'</p>';
+      renderCounts();
+      renderMatrix();
+      updateSummaryBox();
+      return;
+    }
+    logEl.innerHTML = "";
+    markers.forEach(function(m){
+      var card = document.createElement("div");
+      card.className = "marker";
+      card.setAttribute("data-type", m.types[0]);
+      card.id = "marker-"+m.id;
+
+      var head = document.createElement("div");
+      head.className = "m-head";
+      var chipWrap = document.createElement("div");
+      chipWrap.style.display="flex"; chipWrap.style.flexWrap="wrap"; chipWrap.style.gap="6px";
+      m.types.forEach(function(ty){
+        var chip = document.createElement("span");
+        chip.className = "chip";
+        chip.innerHTML = '<span class="dot '+ty+'" style="width:12px;height:12px;border-radius:50%"></span>'+escapeHTML(typeLabel(ty));
+        chipWrap.appendChild(chip);
+      });
+      head.appendChild(chipWrap);
+      card.appendChild(head);
+
+      var q = document.createElement("blockquote");
+      q.className = "m-quote";
+      q.textContent = "“" + m.text + "”";
+      card.appendChild(q);
+
+      m.types.forEach(function(ty){
+        var block = document.createElement("div");
+        block.className = "label-block";
+        var lc = document.createElement("span");
+        lc.className = "chip";
+        lc.innerHTML = '<span class="dot '+ty+'" style="width:12px;height:12px;border-radius:50%"></span>'+escapeHTML(typeLabel(ty));
+        block.appendChild(lc);
+        var pr = document.createElement("p");
+        pr.className = "prompt";
+        pr.textContent = typePrompt(ty);
+        block.appendChild(pr);
+        var ta = document.createElement("textarea");
+        ta.id = "ref-"+m.id+"-"+ty;
+        ta.setAttribute("aria-label", tf("refl_aria",{label:typeLabel(ty)}));
+        ta.placeholder = t("refl_ph");
+        ta.value = m.reflections[ty] || "";
+        ta.addEventListener("input", function(){ m.reflections[ty] = ta.value; updateSummaryBox(); });
+        block.appendChild(ta);
+        card.appendChild(block);
+      });
+
+      var foot = document.createElement("div");
+      foot.className = "m-foot";
+      var jump = document.createElement("button");
+      jump.className = "icon-btn"; jump.type="button"; jump.textContent=t("btn_find");
+      jump.addEventListener("click", function(){ scrollToMark(m.id); });
+      var del = document.createElement("button");
+      del.className = "icon-btn"; del.type="button"; del.textContent=t("btn_delete");
+      del.addEventListener("click", function(){ removeMarker(m.id); });
+      foot.appendChild(jump); foot.appendChild(del);
+      card.appendChild(foot);
+
+      logEl.appendChild(card);
+    });
+    renderCounts();
+    renderMatrix();
+    updateSummaryBox();
+  }
+
+  function renderCounts(){
+    countGrid.innerHTML = "";
+    var total = markers.length;
+    var totalChip = document.createElement("span");
+    totalChip.className="chip";
+    totalChip.innerHTML = "<strong>"+total+"</strong>&nbsp;"+escapeHTML(t("count_passagesWord"));
+    countGrid.appendChild(totalChip);
+    TYPE_ORDER.forEach(function(ty){
+      var n = markers.filter(function(m){return m.types.indexOf(ty)>=0;}).length;
+      if(n>0){
+        var c=document.createElement("span");
+        c.className="chip";
+        c.innerHTML='<span class="dot '+ty+'" style="width:12px;height:12px;border-radius:50%"></span>'+escapeHTML(typeLabel(ty))+": "+n;
+        countGrid.appendChild(c);
+      }
+    });
+  }
+
+  /* ---------- Synthesis matrix ---------- */
+  function renderMatrix(){
+    if(!matrixTable) return;
+    if(!markers.length){
+      matrixTable.innerHTML = '<tbody><tr><td class="matrix-empty">'+escapeHTML(t("mx_empty"))+'</td></tr></tbody>';
+      if(patternNote){ patternNote.hidden = true; patternNote.innerHTML = ""; }
+      return;
+    }
+    var head = "<thead><tr><th>"+escapeHTML(t("mx_colHash"))+"</th><th>"+escapeHTML(t("mx_colPassage"))+"</th>";
+    TYPE_ORDER.forEach(function(ty){ head += '<th class="type-col" title="'+escapeHTML(typeLabel(ty))+'">'+escapeHTML(typeLabel(ty))+'</th>'; });
+    head += "</tr></thead>";
+
+    var body = "<tbody>";
+    markers.forEach(function(m,i){
+      var ex = m.text.length>120 ? m.text.slice(0,120)+"…" : m.text;
+      body += "<tr><td>"+(i+1)+'</td><td class="passage-cell">“'+escapeHTML(ex)+'”</td>';
+      TYPE_ORDER.forEach(function(ty){
+        var on = m.types.indexOf(ty)>=0;
+        body += '<td class="type-cell">'+(on ? '<span class="mx-dot" style="background:var(--c-'+ty+')" title="'+escapeHTML(typeLabel(ty))+'" aria-label="'+escapeHTML(typeLabel(ty))+'"></span>' : '<span aria-hidden="true" style="color:#cdd2da">·</span>')+'</td>';
+      });
+      body += "</tr>";
+    });
+    body += "</tbody>";
+    matrixTable.innerHTML = head + body;
+
+    if(patternNote){
+      var overlaps = markers.filter(function(m){return m.types.length>1;}).length;
+      var counts = TYPE_ORDER.map(function(ty){return {t:ty,n:markers.filter(function(m){return m.types.indexOf(ty)>=0;}).length};})
+                             .filter(function(o){return o.n>0;})
+                             .sort(function(a,b){return b.n-a.n;});
+      var bits = [];
+      bits.push(tf("pat_tagged",{n:markers.length}));
+      if(counts.length){
+        bits.push(tf("pat_frequent",{label:typeLabel(counts[0].t), n:counts[0].n}));
+      }
+      if(overlaps>0){
+        bits.push(tf("pat_overlaps",{n:overlaps}));
+      } else {
+        bits.push(t("pat_tip"));
+      }
+      patternNote.innerHTML = bits.join(" ");
+      patternNote.hidden = false;
+    }
+  }
+
+  function focusMarker(id){
+    var card = document.getElementById("marker-"+id);
+    if(card){ safeScroll(card,{block:"center"}); }
+    var m = markers.filter(function(x){return x.id===id;})[0];
+    if(m){ var ta = document.getElementById("ref-"+id+"-"+m.types[0]); if(ta){ ta.focus(); } }
+  }
+  function scrollToMark(id){
+    var node = markers.filter(function(m){return m.id===id;})[0];
+    if(node && node.node){
+      safeScroll(node.node,{block:"center"});
+      node.node.classList.remove("flash");
+      void node.node.offsetWidth;
+      node.node.classList.add("flash");
+    }
+  }
+  function removeMarker(id){
+    var idx = -1;
+    markers.forEach(function(m,i){ if(m.id===id) idx=i; });
+    if(idx<0) return;
+    var m = markers[idx];
+    if(m.node && m.node.parentNode){
+      var parent = m.node.parentNode;
+      while(m.node.firstChild){ parent.insertBefore(m.node.firstChild, m.node); }
+      parent.removeChild(m.node);
+      parent.normalize();
+    }
+    markers.splice(idx,1);
+    renderLog();
+  }
+
+  /* ---------- Source toggle ---------- */
+  var srcSample = document.getElementById("srcSample");
+  var srcPaste = document.getElementById("srcPaste");
+  var sampleWrap = document.getElementById("sampleWrap");
+  var readingSelect = document.getElementById("readingSelect");
+
+  function setSource(mode){
+    var sample = mode==="sample";
+    if(sample){
+      if(markers.length && !confirmReplace()){ return; }
+      sourceMode = "sample";
+      srcSample.setAttribute("aria-pressed","true");
+      srcPaste.setAttribute("aria-pressed","false");
+      pasteWrap.hidden = true;
+      sampleWrap.hidden = false;
+      resetMarks();
+      renderCurrentReading();
+    }
+  }
+  function confirmReplace(){
+    return window.confirm(t("confirm_replace"));
+  }
+  function resetMarks(){
+    markers = []; nextId = 1; lastRange=null;
+    renderLog();
+  }
+
+  srcSample.addEventListener("click", function(){ setSource("sample"); });
+  srcPaste.addEventListener("click", function(){
+    sourceMode = "paste";
+    srcSample.setAttribute("aria-pressed","false");
+    srcPaste.setAttribute("aria-pressed","true");
+    pasteWrap.hidden = false;
+    sampleWrap.hidden = true;
+  });
+
+  /* ---------- Preloaded readings (lecturas/ folder, or inlined for single-file) ---------- */
+  function splitParas(txt){
+    return txt.replace(/\r/g,"").split(/\n\s*\n/).map(function(x){ return x.replace(/\n/g," ").trim(); }).filter(Boolean);
+  }
+  function renderCurrentReading(){
+    var rd = readings[currentReading];
+    renderReading(rd && rd.parrafos ? rd.parrafos : EMBEDDED_FALLBACK);
+  }
+  function populateReadingSelect(){
+    if(!readingSelect) return;
+    readingSelect.innerHTML = "";
+    readings.forEach(function(rd,i){
+      var o = document.createElement("option");
+      o.value = String(i); o.textContent = rd.titulo || ("Lectura "+(i+1));
+      readingSelect.appendChild(o);
+    });
+    readingSelect.value = String(currentReading);
+    readingSelect.disabled = readings.length < 2;
+  }
+  function useReadings(list){
+    readings = (list && list.length) ? list : [{id:"ejemplo", titulo:"Lectura de ejemplo", parrafos:EMBEDDED_FALLBACK}];
+    currentReading = 0;
+    populateReadingSelect();
+    if(sourceMode==="sample"){ renderCurrentReading(); }
+  }
+  function loadReadings(){
+    if(window.fetch){
+      fetch("lecturas/index.json").then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(idx){
+        return Promise.all(idx.map(function(it){
+          return fetch("lecturas/"+it.archivo).then(function(r){ if(!r.ok) throw 0; return r.text(); })
+                 .then(function(txt){ return {id:it.id, titulo:it.titulo, parrafos:splitParas(txt)}; });
+        }));
+      }).then(useReadings).catch(function(){ useReadings(null); });
+    } else {
+      useReadings(null);
+    }
+  }
+  if(readingSelect){
+    readingSelect.addEventListener("change", function(){
+      var idx = parseInt(readingSelect.value,10) || 0;
+      if(idx===currentReading) return;
+      if(markers.length && !confirmReplace()){ readingSelect.value = String(currentReading); return; }
+      currentReading = idx;
+      resetMarks();
+      renderCurrentReading();
+      safeScroll(readingEl,{block:"start"});
+    });
+  }
+
+  document.getElementById("loadPaste").addEventListener("click", function(){
+    var raw = pasteBox.value.replace(/\r/g,"").trim();
+    if(!raw){ alert(t("alert_paste_empty")); return; }
+    if(markers.length && !confirmReplace()) return;
+    sourceMode = "paste";
+    resetMarks();
+    var paras = raw.split(/\n\s*\n/).map(function(s){return s.replace(/\n/g," ").trim();}).filter(Boolean);
+    if(!paras.length) paras=[raw];
+    renderReading(paras);
+    safeScroll(readingEl,{block:"start"});
+  });
+  document.getElementById("clearMarksFromPaste").addEventListener("click", function(){
+    if(!markers.length){ return; }
+    if(window.confirm(t("confirm_clear"))){
+      markers.slice().forEach(function(m){ removeMarker(m.id); });
+    }
+  });
+
+  /* ---------- Summary (plain text) ---------- */
+  function buildSummary(){
+    var name = document.getElementById("nameField").value.trim();
+    var d = new Date();
+    var dateStr = d.toLocaleDateString(t("locale"),{year:"numeric",month:"long",day:"numeric"});
+    var L=[];
+    L.push(t("sum_title"));
+    L.push("==================================================");
+    if(name) L.push(t("sum_name")+name);
+    L.push(t("sum_date")+dateStr);
+    L.push("");
+
+    L.push(t("sum_glance"));
+    L.push(t("sum_marked")+markers.length);
+    var overlaps=markers.filter(function(m){return m.types.length>1;}).length;
+    L.push(t("sum_multi")+overlaps);
+    TYPE_ORDER.forEach(function(ty){
+      var n=markers.filter(function(m){return m.types.indexOf(ty)>=0;}).length;
+      if(n>0) L.push("  • "+typeLabel(ty)+": "+n);
+    });
+    L.push("");
+
+    L.push(t("sum_mx_legend"));
+    L.push("--------------------------------------------------");
+    if(!markers.length){
+      L.push(t("sum_none_tagged"));
+    } else {
+      L.push(t("sum_mx_header"));
+      markers.forEach(function(m,i){
+        var row = TYPE_ORDER.map(function(ty){ return m.types.indexOf(ty)>=0 ? " X" : " ."; }).join("");
+        var ex = m.text.length>56 ? m.text.slice(0,56)+"…" : m.text;
+        var num = (i+1<10?" ":"")+(i+1);
+        L.push("  "+num+" |"+row+" | "+ex);
+      });
+    }
+    L.push("");
+
+    L.push(t("sum_moments"));
+    L.push("--------------------------------------------------");
+    if(!markers.length){
+      L.push(t("sum_none_marked"));
+    } else {
+      markers.forEach(function(m,i){
+        L.push((i+1)+". "+t("sum_passage")+"“"+m.text+"”");
+        L.push("   "+t("sum_labels")+m.types.map(function(ty){return typeLabel(ty);}).join(", "));
+        m.types.forEach(function(ty){
+          var r=((m.reflections&&m.reflections[ty])||"").trim();
+          L.push("   - "+typeLabel(ty)+": "+(r?r:t("sum_blank")));
+        });
+        L.push("");
+      });
+    }
+
+    var q1=document.getElementById("q1").value.trim();
+    L.push(t("sum_changed"));
+    L.push("--------------------------------------------------");
+    L.push(t("sum_q1"));
+    L.push("  "+(q1||t("sum_blank")));
+    L.push("");
+    L.push("==================================================");
+    L.push(t("sum_footer"));
+    return L.join("\n");
+  }
+
+  function updateSummaryBox(){
+    var out = document.getElementById("summaryOut");
+    if(out){ out.value = buildSummary(); }
+  }
+
+  document.getElementById("copySummary").addEventListener("click", function(){
+    var out=document.getElementById("summaryOut");
+    out.value=buildSummary();
+    var note=document.getElementById("copiedNote");
+    var done=function(){ note.textContent=t("note_copied"); setTimeout(function(){note.textContent="";},2500); };
+    var fail=function(){ out.focus(); out.select(); note.textContent=t("note_copy_fail"); };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(out.value).then(done).catch(function(){
+        out.focus(); out.select();
+        try{ document.execCommand("copy"); done(); }catch(e){ fail(); }
+      });
+    } else {
+      out.focus(); out.select();
+      try{ document.execCommand("copy"); done(); }catch(e){ fail(); }
+    }
+  });
+
+  /* ---------- init ---------- */
+  applyI18n();
+  renderReading(EMBEDDED_FALLBACK);
+  loadReadings();
+  renderLog();
+  renderPendingReflections();
+  selPreview.textContent = t("tag_selPreviewDefault");
+  tbHint.textContent = t("tag_hintDefault");
+  document.getElementById("q1").addEventListener("input", updateSummaryBox);
+  document.getElementById("nameField").addEventListener("input", updateSummaryBox);
+  updateSummaryBox();
+})();
+</script>
+</body>
+</html>

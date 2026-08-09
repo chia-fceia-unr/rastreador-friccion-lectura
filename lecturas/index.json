@@ -1,0 +1,5 @@
+[
+  { "id": "tono-seguro", "titulo": "El tono seguro no es verdad", "archivo": "tono-seguro.txt" },
+  { "id": "verificar",    "titulo": "Verificar lo que la IA afirma", "archivo": "verificar.txt" },
+  { "id": "autoria",      "titulo": "¿De quién es el trabajo?",       "archivo": "autoria.txt" }
+]

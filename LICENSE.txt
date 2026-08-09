@@ -1,0 +1,40 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+=========================================================
+
+OBRA ORIGINAL
+-------------
+"Reading Friction Tracker"
+© Marc Watkins, University of Mississippi.
+Licenciada bajo Creative Commons Attribution 4.0 International (CC BY 4.0).
+
+OBRA DERIVADA
+-------------
+"Rastreador de Fricción de Lectura" — adaptación al español y a la identidad
+institucional de la Facultad de Ciencias Exactas, Ingeniería y Agrimensura
+(FCEIA), Universidad Nacional de Rosario (UNR), para el curso
+"Herramientas de Inteligencia Artificial".
+Adaptación licenciada, igualmente, bajo CC BY 4.0.
+
+CONDICIONES (resumen)
+---------------------
+Usted es libre de:
+  - Compartir: copiar y redistribuir el material en cualquier medio o formato.
+  - Adaptar: remezclar, transformar y construir a partir del material,
+    para cualquier propósito, incluso comercial.
+
+Bajo la siguiente condición:
+  - Atribución: debe dar crédito de manera adecuada, brindar un enlace a la
+    licencia e indicar si se han realizado cambios. Debe hacerlo en cualquier
+    forma razonable, pero no de forma tal que sugiera que usted o su uso tienen
+    el apoyo del licenciante.
+
+Texto legal completo de la licencia:
+  https://creativecommons.org/licenses/by/4.0/legalcode.es
+Resumen legible:
+  https://creativecommons.org/licenses/by/4.0/deed.es
+
+ATRIBUCIÓN SUGERIDA
+-------------------
+«Rastreador de Fricción de Lectura» (FCEIA–UNR), adaptación de
+«Reading Friction Tracker» de Marc Watkins (University of Mississippi),
+licenciado bajo CC BY 4.0.
