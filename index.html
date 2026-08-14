@@ -180,6 +180,8 @@
   .tb-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:9px;}
   .tb-actions .visually-quiet{margin:0;}
   .tagbar{max-height:72vh;overflow-y:auto;}
+  .tagbar.collapsed #tagButtons,
+  .tagbar.collapsed .tb-actions{display:none;}
   .tb-reflections{margin-top:2px;}
   .tb-refl{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);}
   .tb-refl .chip{margin-bottom:4px;}
@@ -453,7 +455,7 @@
 </main>
 
 <!-- STICKY TAGGING BAR -->
-<div class="tagbar" role="region" data-i18n-aria="aria_tagbar" aria-label="Tag selected text">
+<div class="tagbar collapsed" role="region" data-i18n-aria="aria_tagbar" aria-label="Tag selected text">
   <div class="tb-inner">
     <p class="sel-preview" id="selPreview"></p>
     <div class="tag-buttons" id="tagButtons">
@@ -741,8 +743,10 @@
     return {range:range.cloneRange(), text:text};
   }
 
+  var tagbarEl = document.querySelector(".tagbar");
   function setToggleButtonsEnabled(on){
     tagButtons.querySelectorAll("button").forEach(function(b){ b.disabled = !on; });
+    if(tagbarEl){ tagbarEl.classList.toggle("collapsed", !on); }
   }
   function resetToggles(){
     pendingTypes = [];
