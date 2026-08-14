@@ -95,6 +95,12 @@
   .source-toggle{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
   #sampleWrap{margin-bottom:12px;}
   .reading-select{width:100%;max-width:520px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:1rem;color:var(--ink);background:#fff;}
+  .reading-tools{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:0 0 8px;flex-wrap:wrap;}
+  .reading-tools .rt-label{font-size:.82rem;color:var(--muted);}
+  .seg-sm{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;}
+  .seg-sm button{border:0;background:#fff;color:var(--um-blue);padding:6px 13px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;line-height:1;}
+  .seg-sm button:first-child{border-right:1px solid var(--line);}
+  .seg-sm button:hover{background:#f2f4f8;}
   .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;}
   .seg button{
     border:0;background:#fff;color:var(--um-blue);padding:8px 16px;font-size:.9rem;font-weight:600;cursor:pointer;
@@ -395,6 +401,13 @@
     </div>
 
     <hr style="border:0;border-top:1px solid var(--line);margin:16px 0" aria-hidden="true">
+    <div class="reading-tools">
+      <span class="rt-label" data-i18n="text_size_label">Tamaño del texto</span>
+      <div class="seg-sm" role="group" data-i18n-aria="text_size_aria" aria-label="Tamaño del texto">
+        <button id="fsDown" type="button" data-i18n-title="text_smaller" title="Achicar texto" aria-label="Achicar texto">A&minus;</button>
+        <button id="fsUp" type="button" data-i18n-title="text_bigger" title="Agrandar texto" aria-label="Agrandar texto">A+</button>
+      </div>
+    </div>
     <article id="reading" class="reading" data-i18n-aria="reading_aria" aria-label="Reading passage. Select text to tag a moment of friction."></article>
   </section>
 
@@ -508,6 +521,8 @@
       summary_out_label:"Resumen de reflexión generado",
       src_sample:"Lecturas del curso",
       reading_select_label:"Elegí una lectura del curso",
+      text_size_label:"Tamaño del texto",
+      text_size_aria:"Tamaño del texto de la lectura",
       src_paste:"Pegar mi propio texto",
       paste_label:"Pegá tu texto de lectura",
       paste_ph:"Pegá acá tu lectura asignada. Separá los párrafos con una línea en blanco y después hacé clic en «Cargar este texto».",
@@ -1228,6 +1243,14 @@
       try{ document.execCommand("copy"); done(); }catch(e){ fail(); }
     }
   });
+
+  /* ---------- Reading font size ---------- */
+  var readingFS = 1.12; // rem (coincide con el CSS de .reading)
+  function applyReadingFS(){ readingEl.style.fontSize = readingFS.toFixed(2)+"rem"; }
+  var fsDown = document.getElementById("fsDown");
+  var fsUp = document.getElementById("fsUp");
+  if(fsDown){ fsDown.addEventListener("click", function(){ readingFS = Math.max(0.9, readingFS-0.1); applyReadingFS(); }); }
+  if(fsUp){ fsUp.addEventListener("click", function(){ readingFS = Math.min(1.8, readingFS+0.1); applyReadingFS(); }); }
 
   /* ---------- init ---------- */
   applyI18n();
