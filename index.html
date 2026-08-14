@@ -643,12 +643,9 @@
     }
   };
 
-  /* Lectura embebida (respaldo cuando no se puede leer la carpeta lecturas/). */
+  /* Aviso de respaldo (solo se muestra si no se puede leer la carpeta lecturas/, p. ej. sin conexión). */
   var EMBEDDED_FALLBACK = [
-      "Cada vez que le pedís a una herramienta de inteligencia artificial que resuma, redacte o explique algo, recibís una respuesta que suena segura, ordenada y terminada. Pero esa fluidez es, en parte, una puesta en escena: el sistema no «sabe» lo que dice, sino que predice, palabra por palabra, cuál es la continuación más probable a partir de millones de textos. La seguridad del tono no es una medida de la verdad del contenido.",
-      "Es tentador tratar estas herramientas como un atajo que nos ahorra el esfuerzo de pensar. Sin embargo, delegar la primera versión de una idea también delega la parte más formativa del trabajo intelectual: dudar, comparar, descartar. Cuanto más aceptamos la respuesta que aparece primero, menos ejercitamos el criterio que nos permitiría evaluar si esa respuesta es buena.",
-      "Por eso, usar la IA con sentido crítico no consiste solo en preguntarte «¿la respuesta es correcta?», sino también «¿qué está haciendo esta herramienta con mi pregunta, y qué queda afuera?». ¿Qué fuentes hay detrás? ¿Qué sesgos arrastra el modelo? ¿Qué responsabilidad sigue siendo mía cuando firmo un trabajo hecho con su ayuda? Leer críticamente una salida de IA es leer también el sistema que la produjo, no solo el texto.",
-      "Nada de esto implica rechazar la herramienta. La fricción —el pequeño gesto de frenar, verificar una afirmación o reescribir con palabras propias— es lo que convierte a la IA en un instrumento de aprendizaje en lugar de un reemplazo. Cuando notás las costuras de un sistema diseñado para parecer impecable, recuperás la autoría sobre tu propio pensamiento."
+      "No se pudo cargar la lista de lecturas del curso. Probá recargar la página; si el problema persiste, avisale a la cátedra."
   ];
   var readings = [];        // [{id,titulo,parrafos:[...]}]
   var currentReading = 0;
@@ -1095,7 +1092,7 @@
     readingSelect.disabled = readings.length < 2;
   }
   function useReadings(list){
-    readings = (list && list.length) ? list : [{id:"ejemplo", titulo:"Lectura de ejemplo", parrafos:EMBEDDED_FALLBACK}];
+    readings = (list && list.length) ? list : [{id:"ejemplo", titulo:"Lectura no disponible", parrafos:EMBEDDED_FALLBACK}];
     currentReading = 0;
     populateReadingSelect();
     if(sourceMode==="sample"){ renderCurrentReading(); }
@@ -1230,7 +1227,7 @@
 
   /* ---------- init ---------- */
   applyI18n();
-  renderReading(EMBEDDED_FALLBACK);
+  renderReading(["Cargando la lectura…"]);
   loadReadings();
   renderLog();
   renderPendingReflections();
