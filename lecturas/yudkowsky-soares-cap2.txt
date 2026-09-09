@@ -56,7 +56,7 @@ Si utiliza métodos modernos de IA, lo que hace a continuación es, aproximadame
 
 Como los pesos iniciales son aleatorios, la primera vez que ejecuta este programa produce disparates. Quizás diga que hay un 65 % de probabilidades de que la letra siguiente sea «b» y solo un 1 % de que sea «m».
 
-Pero aquí está la clave: si se eligió la arquitectura adecuada, se puede calcular el papel que desempeñó cada parámetro individual en la determinación del resultado final de toda esa aritmética.
+Pero aquí está la clave: si se eligió la arquitectura adecuada, se puede calcular el papel que desempeñó cada parámetro individual en la determinación del resultado final de toda esa aritmética.[1]
 
 Así que se toma cada peso —cientos de miles de millones de pesos— y, para cada uno, se pregunta: «Si hubiera hecho este número apenas mayor o menor, ¿cuánta más o menos probabilidad se habría asignado a la “m” al final de toda esa aritmética?».
 
@@ -86,7 +86,7 @@ Y así es como nacen los bebés, metafóricamente hablando.
 
 Cuando se trata de hacer bebés de verdad, los futuros padres no necesitan saber mucha ciencia. En este caso particular, el paralelismo se mantiene. Los ingenieros de IA que buscan crear una IA necesitan saber algo más que los padres humanos, pero no tanto como podría pensarse.
 
-En resumen, esto es lo que hacen hoy los «padres» de una IA: los ingenieros eligen la arquitectura de la IA y seleccionan qué parámetros se suman y cuáles se multiplican. Construyen el motor que calcula literalmente trillones de gradientes: billones de palabras, miles de millones de parámetros. Las palabras que el modelo aprende a predecir primero se copian por billones desde Internet; luego, trabajadores con salarios bajos u otras IA producen más. Si los ingenieros van un paso más allá y entrenan a la IA con problemas matemáticos u otros acertijos que tienen una única respuesta correcta, seres humanos escriben los programas que verifican las respuestas de la IA.
+En resumen, esto es lo que hacen hoy los «padres» de una IA: los ingenieros eligen la arquitectura de la IA y seleccionan qué parámetros se suman y cuáles se multiplican. Construyen el motor que calcula literalmente billones de gradientes: billones de palabras, miles de millones de parámetros. Las palabras que el modelo aprende a predecir primero se copian por billones desde Internet; luego, trabajadores con salarios bajos u otras IA producen más. Si los ingenieros van un paso más allá y entrenan a la IA con problemas matemáticos u otros acertijos que tienen una única respuesta correcta, seres humanos escriben los programas que verifican las respuestas de la IA.
 
 Y eso es todo; esa es la parte que los seres humanos hacen, ven o pueden comprender si la observan.
 
@@ -118,4 +118,4 @@ Podría pensarse que, como los LLM se cultivan sin mucha comprensión y se entre
 
 Pensemos en una IA que predice la siguiente palabra de un informe médico real que comienza así: «Tras la inyección de 0,3 mg de epinefrina, el paciente...». ¿Qué palabras siguen? ¿«Se desmayó»? ¿«Gritó»? ¿«Volvió a respirar»? El médico que escribió el informe no tuvo que adivinar: se limitó a registrar lo que vio. Predecir es un desafío más difícil. Para predecir lo que escribirá el médico, una IA necesita pensar no solo en el médico, sino también...
 
-Nota: Encontrar arquitecturas que hagan que estos gradientes se comporten bien incluso para parámetros que están muy «profundos» en el proceso —muy lejos de la salida— es el tipo de logro por el que la gente del campo de la IA recibe premios. Y, hablando de manera muy aproximada, esto es por lo que Geoffrey Hinton y John Hopfield recibieron el Premio Nobel.
+[1] Encontrar arquitecturas que hagan que estos gradientes se comporten bien incluso para parámetros que están muy «profundos» en el proceso —muy lejos de la salida— es el tipo de logro por el que la gente del campo de la IA recibe premios. Y, hablando de manera muy aproximada, esto es por lo que Geoffrey Hinton y John Hopfield recibieron el Premio Nobel.
