@@ -112,10 +112,4 @@ La humanidad finalmente alcanzó el nivel de ChatGPT no porque por fin comprendi
 
 Es decir: los ingenieros fracasaron al intentar fabricar IA, pero con el tiempo lograron cultivarla.
 
-· · ·
-
-Podría pensarse que, como los LLM se cultivan sin mucha comprensión y se entrenan únicamente para predecir texto humano, no pueden hacer nada salvo regurgitar expresiones humanas. Pero eso sería incorrecto. Para aprender a hablar como una persona, una IA también debe aprender a predecir el complejo mundo del que hablan las personas.
-
-Pensemos en una IA que predice la siguiente palabra de un informe médico real que comienza así: «Tras la inyección de 0,3 mg de epinefrina, el paciente...». ¿Qué palabras siguen? ¿«Se desmayó»? ¿«Gritó»? ¿«Volvió a respirar»? El médico que escribió el informe no tuvo que adivinar: se limitó a registrar lo que vio. Predecir es un desafío más difícil. Para predecir lo que escribirá el médico, una IA necesita pensar no solo en el médico, sino también...
-
 [1] Encontrar arquitecturas que hagan que estos gradientes se comporten bien incluso para parámetros que están muy «profundos» en el proceso —muy lejos de la salida— es el tipo de logro por el que la gente del campo de la IA recibe premios. Y, hablando de manera muy aproximada, esto es por lo que Geoffrey Hinton y John Hopfield recibieron el Premio Nobel.
