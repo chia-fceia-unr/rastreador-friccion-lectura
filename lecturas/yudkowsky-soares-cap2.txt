@@ -1,0 +1,121 @@
+Nota sobre esta versión: La traducción al español fue realizada con ayuda de inteligencia artificial (GPT-5 Luna en Codex).
+
+Cultivada, no fabricada
+
+Escena: Un hombre y una mujer están sentados en un restaurante durante el día. La mujer habla en voz baja e intensa.
+
+MUJER: Y la cuestión es que no consigo mantener una conversación razonable sobre esto con nadie. Todos los miembros de su familia, salvo él, son personas terribles, y él dice que tiene que esforzarse mucho para no ser terrible también; y a veces lo es, incluso conmigo. Por mi parte, mi familia tiene problemas de depresión. Y mis padres me presionan para que tenga un bebé, y mis amigos tienen un millón de opiniones que parecen basarse únicamente en sus propias experiencias con sus parejas y sus hijos. ¿Debería buscar un donante de esperma? ¿Debería simplemente renunciar a tener hijos? Y, si tengo un bebé, ¿crecerá feliz y será una buena persona?
+
+HOMBRE: ¡Has venido al lugar indicado! ¡Nadie puede predecir mejor que yo cómo saldrán los bebés! ¡Sé todo sobre cómo se hacen!
+
+MUJER: Tú... ¿qué? ¡No necesito saber cómo se hacen los bebés! ¡Necesito saber cómo saldrá el mío!
+
+HOMBRE: Bueno, si sabes cómo se hacen los bebés... ¿qué más podrías necesitar saber?
+
+MUJER: Lo primero que pensé fue: «la genética concreta de mi bebé», salvo que...
+
+HOMBRE: ¡Ah! ¡Entonces tengo la solución! Hoy en día, secuenciar el genoma completo de una persona es bastante asequible. Solo tienes que crear un embrión con uno de tus óvulos y el esperma de tu marido, y hacer que secuencien su genoma antes de decidir si implantarlo. Esa secuencia genética te dirá todo lo que hay que saber sobre tu bebé.
+
+MUJER: Pero ¿sabemos lo suficiente sobre los genes asociados con cosas como «ser un ser humano terrible» o «ser feliz»? Lo suficiente como para decirme...
+
+HOMBRE: Una vez que conozcas todas las bases de ADN de los genes de tu bebé, y puedas consultarlas en cualquier momento, su genética será transparente para ti. No existirá ninguna verdad sobre sus genes que tú desconozcas.
+
+MUJER: Tendría un archivo con tres mil millones de letras inescrutables, como «CATTCA». Me llevaría cien años leerlas todas. No aprendería nada aunque lo intentara. Aunque esos miles de millones de letras inescrutables tengan una enorme influencia en el destino de mi bebé, las letras del ADN en bruto no me dicen realmente cómo funciona el cerebro de mi hijo ni qué pensamientos surgirán dentro de ese cerebro cuando crezca...
+
+HOMBRE: Ah, ¡quieres decir que no sabes física! Pero eso es sencillo. Una vez que sepas cómo interactúan los protones, los neutrones y los electrones, sabrás todo lo que hay que saber sobre los cerebros, porque comprenderás cada suceso que ocurre dentro de las neuronas.
+
+MUJER: Cambiemos de tema.
+
+· · ·
+
+Antes de que podamos explicar por qué una superinteligencia artificial obtenida mediante cualquier método parecido a los actuales saldría inevitablemente mal, necesitamos repasar rápidamente esos métodos modernos: cómo funcionan, qué producen y qué tienen en común los ingenieros de IA con una madre que solo conoce el ADN de su bebé.
+
+El hecho más fundamental acerca de las IA actuales es que son cultivadas, no fabricadas. No se parece a la manera en que se crea otro software; de hecho, en ciertos aspectos importantes, se parece más a la manera en que se crea un ser humano. En concreto, los ingenieros entienden el proceso que da como resultado una IA, pero no comprenden demasiado lo que sucede dentro de las mentes de IA que consiguen crear.
+
+Supongamos que una persona dedicada a la ingeniería, sin un conocimiento profundo del lenguaje ni una gran teoría de la inteligencia, quisiera crear una máquina que hablara con sensatez. ¿Cómo podría hacerlo?
+
+Quiere escribir un texto y que una máquina continúe escribiéndolo de manera sensata.
+
+Decide empezar por enseñarle que, en una oración que comienza con «Once upon a ti», la letra siguiente probablemente sea «m».
+
+Podría crear un programa que se limitara a comprobar si el fragmento de oración es «Once upon a ti» y, en tal caso, produjera la letra «m». Pero eso no funcionaría con otros fragmentos, como «Four score and sev», y quiere que la máquina sea capaz de completar toda clase de oraciones o de generar conversaciones o ensayos. Incluso quiere que complete con sensatez oraciones que ninguna persona haya escrito jamás.
+
+Si utiliza métodos modernos de IA, lo que hace a continuación es, aproximadamente, algo así:
+
+1. Primero toma el fragmento de oración —«Once upon a ti», en nuestro ejemplo— y lo representa como una serie de números; por ejemplo, asocia la A con el 1, la B con el 2, la C con el 3 y así sucesivamente, además de asignar algunos números a los espacios y a los signos de puntuación. «Once upon a ti» se convierte en una serie de números como «15 14 3...». Esto se denomina la entrada.
+
+2. A continuación, consigue una computadora capaz de almacenar cantidades enormes de números. Cada casilla destinada a un número se denomina parámetro. (A comienzos de 2025, las IA de vanguardia usan unos pocos billones de parámetros.)
+
+3. Llena ese espacio de almacenamiento con números; simplificando en exceso, digamos que esos números se eligen al azar. Los números que ocupan las casillas se llaman pesos.
+
+4. Luego determina la arquitectura: las reglas para combinar la entrada (como la secuencia «15 14 3...» correspondiente a «Once upon a ti») con los pesos de los parámetros. Algo como: «Multiplicaré cada número de entrada por el peso del primer parámetro, luego lo sumaré al peso del segundo parámetro, después lo sustituiré por cero si es negativo y luego...». Elige una enorme cantidad de operaciones de ese tipo —cientos de miles de millones—, enlazando cada uno de los pesos con el cálculo.
+
+5. Todas estas operaciones generan un conjunto de números de salida, que se interpretan como una predicción de la letra que viene a continuación. En nuestro ejemplo, se trataría el primer número de salida como la probabilidad de que sea A, el segundo como la probabilidad de que sea B, y así sucesivamente.
+
+6. A continuación, «entrena» su inteligencia mecánica incipiente mediante un proceso denominado descenso por gradiente.
+
+Como los pesos iniciales son aleatorios, la primera vez que ejecuta este programa produce disparates. Quizás diga que hay un 65 % de probabilidades de que la letra siguiente sea «b» y solo un 1 % de que sea «m».
+
+Pero aquí está la clave: si se eligió la arquitectura adecuada, se puede calcular el papel que desempeñó cada parámetro individual en la determinación del resultado final de toda esa aritmética.
+
+Así que se toma cada peso —cientos de miles de millones de pesos— y, para cada uno, se pregunta: «Si hubiera hecho este número apenas mayor o menor, ¿cuánta más o menos probabilidad se habría asignado a la “m” al final de toda esa aritmética?».
+
+Esto se denomina el gradiente de ese parámetro. El gradiente indica cómo —y cuánto— modificar el peso de ese parámetro para que la respuesta final sea un poco más correcta.
+
+Entonces se ajustan todos y cada uno de los pesos de acuerdo con su gradiente. Cada peso se empuja en la dirección que hace que la respuesta sea ligeramente más correcta. Esto no se hace a mano: se escribe un programa que lo haga. Los ingenieros de IA rara vez miran alguno de esos números; examinarlos todos llevaría más de una vida humana.
+
+Los científicos de la computación conciben esto como un «descenso» hacia una respuesta «menos mala»; de ahí el nombre «descenso por gradiente».
+
+Hacerlo una sola vez no dará una respuesta perfecta, sino apenas una respuesta un poco menos mala. Pero, como todo este proceso puede automatizarse, es posible repetirlo con billones de palabras —denominadas datos de entrenamiento— en apenas unos meses, por solo unos cientos de millones de dólares y en las computadoras más avanzadas del mundo. (Esperemos que nuestro protagonista sea rico o trabaje para una gran empresa). Este proceso se denomina entrenamiento.
+
+7. Una vez que la máquina está completamente entrenada, sus salidas —las probabilidades que genera— pueden transformarse en el texto corriente que ve el usuario. Si la IA predice con mayor probabilidad que la «m» continúa «Once upon a ti», se añade esa «m» para obtener «Once upon a tim». Luego se vuelve a introducir la nueva secuencia ampliada para pedir una predicción de la letra siguiente, y se obtiene «e». El proceso continúa y la máquina empieza a hablar.
+
+Ese conjunto de cientos de miles de millones de pesos, ajustados una y otra vez mediante descenso por gradiente hasta que sus predicciones más probables se parecen al lenguaje humano real, se denomina modelo de lenguaje grande (LLM, por sus siglas en inglés). Más concretamente, un «modelo base».
+
+Si se quiere convertir el modelo base en un LLM útil, como ChatGPT, queda un paso más: otra ronda de descenso por gradiente sobre entradas con un formato como este:
+
+Usuario: ¿Cuál es la capital de España?
+
+Asistente: Madrid.
+
+El propósito de esta parte no es enseñarle al LLM que Madrid es la capital de España; el LLM ya lo sabe después de haber sido entrenado con buena parte de Internet. La idea, más bien, es ajustar el LLM para que complete el texto posterior a «Asistente:» con una respuesta útil, en lugar de una respuesta como «¿Por qué diablos me lo preguntas? Búscalo tú mismo en Google», sin importar lo frecuente que pudiera ser esta última en las conversaciones humanas reales con las que fue entrenado. Si nuestro protagonista trabajara para una gran empresa que proporcionara todas esas computadoras, esta sería también la fase en la que entrenaría a la IA para que no dijera palabrotas ni explicara cómo hacer un puente eléctrico a un automóvil, utilizando valoraciones humanas (o, últimamente, generadas por IA) acerca de qué tipos de respuestas resultan más aceptables para la empresa.
+
+Y así es como nacen los bebés, metafóricamente hablando.
+
+· · ·
+
+Cuando se trata de hacer bebés de verdad, los futuros padres no necesitan saber mucha ciencia. En este caso particular, el paralelismo se mantiene. Los ingenieros de IA que buscan crear una IA necesitan saber algo más que los padres humanos, pero no tanto como podría pensarse.
+
+En resumen, esto es lo que hacen hoy los «padres» de una IA: los ingenieros eligen la arquitectura de la IA y seleccionan qué parámetros se suman y cuáles se multiplican. Construyen el motor que calcula literalmente trillones de gradientes: billones de palabras, miles de millones de parámetros. Las palabras que el modelo aprende a predecir primero se copian por billones desde Internet; luego, trabajadores con salarios bajos u otras IA producen más. Si los ingenieros van un paso más allá y entrenan a la IA con problemas matemáticos u otros acertijos que tienen una única respuesta correcta, seres humanos escriben los programas que verifican las respuestas de la IA.
+
+Y eso es todo; esa es la parte que los seres humanos hacen, ven o pueden comprender si la observan.
+
+Tal vez se pregunte si todos los secretos de la inteligencia se esconden en las decisiones concretas sobre la arquitectura: los secretos para decidir qué parámetros se suman y cuáles se multiplican. Le ahorraremos una descripción completa de la arquitectura de Llama 3.1 405B, un LLM que estaba a la vanguardia a mediados de 2024, aunque la hemos incluido en los recursos en línea. Basta decir aquí que la arquitectura es grande y repetitiva, y que, a grandes rasgos, implica asignar 16.384 números a cada «token» posible; luego, disponer miles de millones de parámetros en 128 «cabezas de atención» diferentes que permiten establecer vínculos cruzados entre tokens; y ensamblarlas (junto con algunas otras operaciones simples) en una «capa», una de las 126 capas de ese tipo... y así sucesivamente.
+
+Todo lo cual equivale a decir: una IA es un montón de miles de millones de números sometidos a descenso por gradiente.
+
+Nadie entiende cómo hacen esos números para que estas IA hablen.
+
+Los números no están ocultos, del mismo modo que el ADN de una persona no está oculto para quien ha secuenciado su genoma. Si se quisiera averiguar si un bebé humano crecerá feliz y será una buena persona, en principio se podrían examinar todos sus genes: cadenas de ADN que dirían cosas como «CATTCA». Sin embargo, al igual que la mujer de la fábula con la que comienza este capítulo, probablemente nadie se molestaría en hacerlo, porque sabría que limitarse a mirar las letras del ADN no le revelaría cómo pensará o actuará la persona adulta.
+
+La relación de los biólogos con el ADN es prácticamente la misma que la de los ingenieros de IA con los números contenidos en una IA. De hecho, los biólogos saben mucho más acerca de cómo el ADN se convierte en bioquímica y en rasgos adultos que lo que entienden los ingenieros acerca de cómo los pesos de una IA se convierten en pensamiento y conducta. Los biólogos llevan décadas más trabajando en ello.
+
+Del mismo modo, nadie puede mirar los números en bruto de una IA y determinar qué tan bien jugará al ajedrez esa IA en particular; para averiguarlo, los ingenieros solo pueden ejecutarla y ver qué ocurre. La gran pila de números hará aquello con lo que haya tropezado el descenso por gradiente. La máquina que exhibe esa conducta no es un dispositivo cuidadosamente fabricado, del que comprendamos todas y cada una de sus partes.
+
+Que no haya confusión: hay mucho que entender sobre el proceso que se ejecuta para cultivar una IA. Conseguir que una arquitectura funcione de verdad exige una enorme colección de trucos, pero esos trucos se parecen a los que podría utilizar un nutricionista para asegurar el desarrollo saludable del cerebro de un feto durante el embarazo, con la esperanza de influir indirectamente en cómo se desarrollará el cerebro del bebé. Los trucos concretos varían según las particularidades de la arquitectura, el hardware informático utilizado y, hablando metafóricamente, según si el duodécimo cumpleaños del programador principal coincidió con un eclipse lunar. Quienes tienen experiencia suficiente para elegir los trucos adecuados pueden cobrar literalmente millones de dólares al año, porque esto tiene más de arte que de ciencia y las empresas no pueden construir IA sin su ayuda.
+
+Pero eso no es lo mismo que entender qué significan los números o por qué funcionan.
+
+Y los ingenieros no están a punto de empezar a comprenderlo, ni mucho menos. A mediados de la década de 1950, la humanidad se embarcó en un gran proyecto para comprender la inteligencia lo suficientemente bien como para fabricarla dentro de una máquina. El avance de esa investigación se estancó durante una serie de «inviernos de la IA», en los que el dinero invertido en investigar la IA nunca dio frutos y la financiación se desplomó repetidamente. La humanidad nunca aprendió a comprender la inteligencia; nunca aprendimos a construir mentes a mano.
+
+La humanidad finalmente alcanzó el nivel de ChatGPT no porque por fin comprendiera la inteligencia lo bastante bien como para fabricar una mente inteligente. En cambio, las computadoras se volvieron lo bastante potentes como para que el descenso por gradiente pudiera producir IA en serie, sin que ningún ser humano tuviera que comprender las cogniciones que crecían en su interior.
+
+Es decir: los ingenieros fracasaron al intentar fabricar IA, pero con el tiempo lograron cultivarla.
+
+· · ·
+
+Podría pensarse que, como los LLM se cultivan sin mucha comprensión y se entrenan únicamente para predecir texto humano, no pueden hacer nada salvo regurgitar expresiones humanas. Pero eso sería incorrecto. Para aprender a hablar como una persona, una IA también debe aprender a predecir el complejo mundo del que hablan las personas.
+
+Pensemos en una IA que predice la siguiente palabra de un informe médico real que comienza así: «Tras la inyección de 0,3 mg de epinefrina, el paciente...». ¿Qué palabras siguen? ¿«Se desmayó»? ¿«Gritó»? ¿«Volvió a respirar»? El médico que escribió el informe no tuvo que adivinar: se limitó a registrar lo que vio. Predecir es un desafío más difícil. Para predecir lo que escribirá el médico, una IA necesita pensar no solo en el médico, sino también...
+
+Nota: Encontrar arquitecturas que hagan que estos gradientes se comporten bien incluso para parámetros que están muy «profundos» en el proceso —muy lejos de la salida— es el tipo de logro por el que la gente del campo de la IA recibe premios. Y, hablando de manera muy aproximada, esto es por lo que Geoffrey Hinton y John Hopfield recibieron el Premio Nobel.

@@ -3,5 +3,10 @@
     "id": "mitchell-prologo",
     "titulo": "Lectura 1.1. Prólogo - Inteligencia Artificial - Mitchell",
     "archivo": "mitchell-prologo.txt"
+  },
+  {
+    "id": "yudkowsky-cap2",
+    "titulo": "Lectura 2.1. Capítulo 2 - If Anyone Builds It, Everyone Dies - Yudkowsky y Soares",
+    "archivo": "yudkowsky-soares-cap2.txt"
   }
 ]
