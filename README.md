@@ -18,9 +18,39 @@ Los estudiantes marcan momentos de **fricción** en una lectura (confusión, acu
 | `logo-fceia-blanco.png` / `logo-fceia-navy.png` | Logo FCEIA·UNR (blanco para el header navy, navy para el pie). |
 | `README.md` / `LICENSE.txt` | Documentación y licencia. |
 
+## Cómo está organizado (importante)
+
+Hay **dos carpetas distintas** y conviene no mezclarlas:
+
+```
+Herramientas de Inteligencia Artificial/
+├── Lecturas/                          ← FUENTES (fuera del repo, no se publican)
+│   ├── Melanie Mitchell - ... Prologo.md
+│   ├── Yudkowsky y Soares - ... Capitulo 2 ....md
+│   └── ...                              (los .md originales, con formato Markdown)
+│
+└── Recursos/rastreador-friccion-lectura/   ← EL REPO (esto es lo que se publica)
+    ├── index.html
+    └── lecturas/                      ← LO QUE LEE LA APP
+        ├── index.json                   (el índice: título + archivo)
+        ├── mitchell-prologo.txt
+        └── yudkowsky-soares-cap2.txt    (texto plano, sin Markdown)
+```
+
+- **`Lecturas/`** (fuera del repo) = donde guardás los **`.md` originales** de las traducciones. Es tu archivo de trabajo; no se publica.
+- **`lecturas/`** (dentro del repo) = **solo** `index.json` + los **`.txt`** que consume la app.
+
+> **La app no lee `.md`.** Si copiás un `.md` dentro de `lecturas/`, no va a aparecer como lectura. Por eso hay que **convertir** el `.md` a `.txt` (quitar `#`, `>`, `**`, backticks, notas al pie) y recién ahí sumarlo al `index.json`. El `.gitignore` ignora `lecturas/*.md` para que un `.md` copiado por error no se publique.
+
+### Flujo para agregar una lectura nueva
+1. Guardá/corregí el `.md` en la carpeta **`Lecturas/`**.
+2. Convertilo a **texto plano** en `lecturas/<nombre>.txt` (párrafos separados por una línea en blanco, sin Markdown).
+3. Agregá la entrada en `lecturas/index.json` con su `titulo` y `archivo`.
+4. `git add` + `commit` + `push` (ver `DEPLOY.md`).
+
 ## Lecturas del curso
 
-Las lecturas viven en la carpeta **`lecturas/`**:
+Las lecturas que consume la app viven en la carpeta **`lecturas/`**:
 
 - `lecturas/index.json` — el índice. Cada entrada tiene `id`, `titulo` y `archivo`:
   ```json

@@ -8,3 +8,7 @@ Desktop.ini
 .vscode/
 .idea/
 *~
+
+# Fuentes de lecturas: los .md originales viven en la carpeta "Lecturas/" (fuera del repo).
+# Dentro de lecturas/ solo van index.json + los .txt que lee la app.
+lecturas/*.md
