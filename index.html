@@ -635,6 +635,7 @@
       report_footer:"«Reading Friction Tracker», obra original de Marc Watkins (Universidad de Mississippi), bajo licencia CC BY 4.0. Adaptación de la FCEIA–UNR para el curso «Herramientas de Inteligencia Artificial», compartida bajo la misma licencia. No se recopilan, almacenan ni transmiten datos de los estudiantes.",
 
       sum_title:"RASTREADOR DE FRICCIÓN DE LECTURA — RESUMEN DE REFLEXIÓN",
+      sum_own_text:"Texto propio (pegado por el estudiante)",
       sum_name:"Nombre: ",
       sum_date:"Fecha: ",
       sum_glance:"LA FRICCIÓN DE UN VISTAZO",
@@ -666,6 +667,7 @@
   ];
   var readings = [];        // [{id,titulo,parrafos:[...]}]
   var currentReading = 0;
+  var readingTitle = "";    // título de lo que está cargado en pantalla (va al resumen)
 
   /* ---------- Language state & helpers ---------- */
   var LANG = "es";
@@ -1097,7 +1099,23 @@
   }
   function renderCurrentReading(){
     var rd = readings[currentReading];
+    readingTitle = rd && rd.titulo ? rd.titulo : "";
     renderReading(rd && rd.parrafos ? rd.parrafos : EMBEDDED_FALLBACK);
+    setReadingParam(rd && rd.id);
+    updateSummaryBox();
+  }
+
+  /* La lectura elegida queda en el enlace: ?lectura=<id> */
+  function getReadingParam(){
+    try{ return new URLSearchParams(window.location.search).get("lectura"); }catch(e){ return null; }
+  }
+  function setReadingParam(id){
+    try{
+      if(!window.history || !history.replaceState) return;
+      var u = new URL(window.location.href);
+      if(id){ u.searchParams.set("lectura", id); } else { u.searchParams.delete("lectura"); }
+      history.replaceState(null, "", u.toString());
+    }catch(e){}
   }
   function populateReadingSelect(){
     if(!readingSelect) return;
@@ -1113,6 +1131,10 @@
   function useReadings(list){
     readings = (list && list.length) ? list : [{id:"ejemplo", titulo:"Lectura no disponible", parrafos:EMBEDDED_FALLBACK}];
     currentReading = 0;
+    var wanted = getReadingParam();
+    if(wanted){
+      readings.forEach(function(rd,i){ if(rd.id===wanted){ currentReading = i; } });
+    }
     populateReadingSelect();
     if(sourceMode==="sample"){ renderCurrentReading(); }
   }
@@ -1148,7 +1170,10 @@
     resetMarks();
     var paras = raw.split(/\n\s*\n/).map(function(s){return s.replace(/\n/g," ").trim();}).filter(Boolean);
     if(!paras.length) paras=[raw];
+    readingTitle = t("sum_own_text");
+    setReadingParam(null);
     renderReading(paras);
+    updateSummaryBox();
     safeScroll(readingEl,{block:"start"});
   });
   document.getElementById("clearMarksFromPaste").addEventListener("click", function(){
@@ -1165,6 +1190,7 @@
     var dateStr = d.toLocaleDateString(t("locale"),{year:"numeric",month:"long",day:"numeric"});
     var L=[];
     L.push(t("sum_title"));
+    if(readingTitle) L.push(readingTitle);
     L.push("==================================================");
     if(name) L.push(t("sum_name")+name);
     L.push(t("sum_date")+dateStr);
