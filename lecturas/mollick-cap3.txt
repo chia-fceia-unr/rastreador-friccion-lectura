@@ -1,6 +1,6 @@
 Fuente: Ethan Mollick, Co-Intelligence: Living and Working with AI, parte I, capítulo 3, «Four Rules for Co-Intelligence».
 
-Sobre esta versión: Traducción no oficial al español, realizada con ayuda de inteligencia artificial (GPT-6 Astra) a partir del texto proporcionado. Se conservan las afirmaciones y las referencias temporales del original. Las dos imágenes mencionadas en el cuarto principio no estaban incluidas en el material recibido; su ubicación se señala en el texto.
+Sobre esta versión: Traducción no oficial al español, realizada con ayuda de inteligencia artificial (GPT-6 Astra) a partir del texto original en inglés. Se conservan las afirmaciones y las referencias temporales del original. Las dos imágenes mencionadas en el cuarto principio no están incluidas acá (aunque su ubicación se señala en el texto).
 
 El hecho es que vivimos en un mundo con inteligencias artificiales, y eso significa que necesitamos entender cómo trabajar con ellas. Por eso debemos establecer algunas reglas básicas. Como es probable que la IA que tengas disponible cuando leas este libro sea distinta de la que tengo yo al escribirlo, quiero plantear principios generales. Nos centraremos en aspectos que, en la medida de lo posible, sean inherentes y perdurables en todos los sistemas actuales de IA generativa basados en grandes modelos de lenguaje.
 
